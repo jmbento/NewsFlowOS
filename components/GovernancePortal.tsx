@@ -43,7 +43,7 @@ const chapters = [
     content: (
       <div className="space-y-6">
         <p className="text-zinc-600 text-sm leading-relaxed">
-          O NewsFlow OS é a espinha dorsal tecnológica do **Diário do Vale**. Nossa operação é regida pelo Núcleo de Governança, garantindo que cada peça de conteúdo atenda aos padrões de excelência e veracidade.
+          O NewsFlow OS é o ambiente para sua criatividade fluir. Nossa operação é regida pelo Núcleo de Governança, garantindo que cada peça de conteúdo atenda aos padrões de excelência e veracidade.
         </p>
         <div className="grid grid-cols-1 gap-4">
           <div className="p-4 bg-white/80 border border-zinc-200 rounded-lg shadow-sm">
@@ -181,7 +181,9 @@ export const GovernancePortal: React.FC = () => {
                    <h1 className="text-3xl font-black text-zinc-900 tracking-tight leading-none uppercase italic">
                     NewsFlow <span className="text-yellow-500">Nodes</span>
                    </h1>
-                   <p className="text-zinc-500 text-sm mt-3 font-bold uppercase tracking-[0.2em]">O Cérebro Operacional do Diário do Vale</p>
+                   <p className="text-zinc-600 text-base mt-4 leading-relaxed font-medium">
+                    Bem-vindo ao Coração da Nossa Inteligência. O NewsFlow OS é o novo pulso do Diário do Vale.
+                   </p>
                 </div>
 
                 <div className="w-full max-w-xl aspect-video bg-slate-100 border border-slate-300 rounded-md overflow-hidden relative group cursor-pointer shadow-sm">
@@ -203,8 +205,8 @@ export const GovernancePortal: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col items-center gap-4 w-full">
-                  <button onClick={next} className="px-12 py-4 bg-black text-white rounded-md text-md font-semibold hover:opacity-90 transition-all shadow-sm flex items-center gap-3">
-                    Acessar Gov Central <ArrowRight className="w-5 h-5" />
+                  <button onClick={next} className="px-12 py-4 bg-yellow-400 text-zinc-900 rounded-md text-md font-black hover:bg-yellow-500 hover:shadow-lg hover:-translate-y-0.5 transition-all shadow-md flex items-center gap-3">
+                    Próximo <ArrowRight className="w-5 h-5" />
                   </button>
                   <p className="text-xs text-slate-500 font-medium">Acesso restrito a colaboradores autorizados</p>
                 </div>
@@ -234,7 +236,7 @@ export const GovernancePortal: React.FC = () => {
                    <button onClick={back} className="px-6 py-2 text-xs font-bold text-zinc-400 hover:text-zinc-900 flex items-center gap-2 transition-colors">
                       <ChevronLeft className="w-4 h-4" /> Anterior
                    </button>
-                   <button onClick={next} className="px-8 py-3 bg-zinc-100 border border-zinc-200 text-zinc-900 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:bg-yellow-400 hover:border-yellow-500 transition-all shadow-sm">
+                   <button onClick={next} className="px-8 py-3 bg-yellow-400 border border-yellow-500 text-zinc-900 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:bg-yellow-500 hover:shadow-lg hover:-translate-y-0.5 transition-all shadow-md">
                       Próximo <ChevronRight className="w-4 h-4" />
                    </button>
                 </div>

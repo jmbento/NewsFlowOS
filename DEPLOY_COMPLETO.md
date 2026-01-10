@@ -85,8 +85,10 @@ supabase db push
    - **Install Command:** `npm install`
 6. Configure variáveis de ambiente:
    ```
-   VITE_SUPABASE_URL = https://ajgqxifhvlwudqlhsfqy.supabase.co
-   VITE_SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqZ3F4aWZodmx3dWRxbGhzZnF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MTEyMTcsImV4cCI6MjA4MzE4NzIxN30._1Mab1y6k5gW4s3_Xhg6b5A5Xa_KLtM2yRiTyzReRuU
+   VITE_SUPABASE_URL = https://your-project-ref.supabase.co
+   VITE_SUPABASE_ANON_KEY = your-supabase-anon-key
+   
+   > ⚠️ **IMPORTANTE:** Substitua pelos valores reais obtidos no Supabase Dashboard → Project Settings → API
    ```
 7. Selecione ambientes: **Production**, **Preview**, **Development**
 8. Clique em **Deploy**

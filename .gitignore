@@ -27,3 +27,9 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+
+# Supabase - Service Role Keys (CRÍTICO: nunca commitar)
+*service*role*
+*SERVICE*ROLE*
+*service_role*
+*SERVICE_ROLE*

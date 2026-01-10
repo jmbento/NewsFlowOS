@@ -32,9 +32,24 @@ fi
 
 echo -e "${GREEN}✅ Vercel CLI configurado${NC}\n"
 
-# Variáveis do Supabase
-SUPABASE_URL="https://ajgqxifhvlwudqlhsfqy.supabase.co"
-SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqZ3F4aWZodmx3dWRxbGhzZnF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MTEyMTcsImV4cCI6MjA4MzE4NzIxN30._1Mab1y6k5gW4s3_Xhg6b5A5Xa_KLtM2yRiTyzReRuU"
+# ⚠️ IMPORTANTE: Configure suas credenciais do Supabase aqui ou use variáveis de ambiente
+# Opção 1: Definir diretamente (substitua pelos valores reais)
+SUPABASE_URL="${VITE_SUPABASE_URL:-https://your-project-ref.supabase.co}"
+SUPABASE_ANON_KEY="${VITE_SUPABASE_ANON_KEY:-your-supabase-anon-key}"
+
+# Opção 2: Solicitar ao usuário
+if [[ "$SUPABASE_URL" == "https://your-project-ref.supabase.co" ]] || [[ "$SUPABASE_ANON_KEY" == "your-supabase-anon-key" ]]; then
+    echo -e "${YELLOW}⚠️  Credenciais não configuradas.${NC}"
+    echo -e "${YELLOW}💡 Configure as variáveis de ambiente VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY${NC}"
+    echo -e "${YELLOW}💡 OU edite este script e substitua os valores acima.${NC}"
+    echo ""
+    read -p "Deseja continuar mesmo assim? (s/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Ss]$ ]]; then
+        echo -e "${YELLOW}❌ Cancelado. Configure as credenciais e tente novamente.${NC}"
+        exit 1
+    fi
+fi
 
 echo -e "${BLUE}📋 Variáveis a configurar:${NC}"
 echo "   VITE_SUPABASE_URL=$SUPABASE_URL"

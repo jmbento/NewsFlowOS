@@ -26,13 +26,14 @@ import {
 } from 'lucide-react';
 
 // Node Type Color Bars (Bordas laterais coloridas)
+// Audiovisual: Roxo, Editorial: Verde, Comercial: Dourado
 const NODE_TYPE_COLORS: Record<string, string> = {
-  campaign: 'border-l-purple-600',
+  campaign: 'border-l-amber-500', // Comercial - Dourado
   os: 'border-l-blue-600',
-  site: 'border-l-emerald-600',
-  print: 'border-l-amber-600',
-  video: 'border-l-rose-600',
-  podcast: 'border-l-pink-600',
+  site: 'border-l-emerald-600', // Editorial - Verde
+  print: 'border-l-emerald-600', // Editorial - Verde
+  video: 'border-l-purple-600', // Audiovisual - Roxo
+  podcast: 'border-l-purple-600', // Audiovisual - Roxo
   task: 'border-l-indigo-600',
   custom_action: 'border-l-slate-600',
   demand: 'border-l-cyan-600',
@@ -86,9 +87,12 @@ const APPROVAL_CONFIG: Record<ApprovalStatus, { label: string; icon: any; color:
 
 // Workflow Steps por tipo
 const WORKFLOW_STEPS = {
-  video: ['Captação', 'Decupagem', 'Edição V1', 'Edição V2', 'Edição VF', 'Redes Sociais'],
+  video: ['Captação/Logística', 'Decupagem', 'Edição V1', 'Edição V2', 'Edição VF', 'Redes Sociais'],
+  podcast: ['Captação/Logística', 'Decupagem', 'Edição V1', 'Edição V2', 'Edição VF', 'Redes Sociais'],
   print: ['Nº Páginas', 'Diagramação', 'Data Edição'],
+  site: ['Nº Páginas', 'Diagramação', 'Data Edição'],
   campaign: ['Ideação', 'Proposta', 'Apresentação', 'Execução'],
+  os: ['Ideação', 'Proposta', 'Apresentação', 'Execução'],
 };
 
 // Função para encontrar o node raiz (campanha/OS)
@@ -281,14 +285,19 @@ export const N8NBaseNode = ({
     <>
       <div 
         className={`
-          bg-white/90 backdrop-blur-md
+          bg-white/95 backdrop-blur-[12px]
           border-l-4 ${typeColor}
           border-t border-r border-b border-slate-300
           rounded-md shadow-sm
           transition-all duration-150
           ${selected ? 'ring-2 ring-purple-500 border-purple-500 shadow-lg' : 'hover:border-slate-400'}
         `}
-        style={{ minWidth: '200px', maxWidth: '240px' }}
+        style={{ 
+          minWidth: '200px', 
+          maxWidth: '240px',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
         onContextMenu={handleContextMenu}
       >
         <NodeResizer 
@@ -306,10 +315,10 @@ export const N8NBaseNode = ({
               <Icon className={`w-3.5 h-3.5 text-slate-900`} />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-xs font-bold text-slate-950 leading-tight line-clamp-1">
+              <h3 className="text-xs font-black leading-tight line-clamp-1" style={{ color: '#000000', fontWeight: 800 }}>
                 {NODE_TYPE_LABELS[nodeType] || title}
               </h3>
-              <p className="text-xs font-semibold text-slate-950 mt-0.5 line-clamp-1">
+              <p className="text-xs font-semibold text-slate-900 mt-0.5 line-clamp-1">
                 {inheritedLabel}
               </p>
             </div>

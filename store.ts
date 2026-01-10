@@ -421,7 +421,8 @@ export const useStore = create<AppState>((set, get) => ({
   pushToUndo: () => {
     const { nodes, edges, undoStack } = get();
     const newStack = [...undoStack, { nodes: JSON.parse(JSON.stringify(nodes)), edges: JSON.parse(JSON.stringify(edges)) }];
-    if (newStack.length > 20) newStack.shift();
+    // Limite de 10 níveis conforme solicitado
+    if (newStack.length > 10) newStack.shift();
     set({ undoStack: newStack, redoStack: [] });
   },
 

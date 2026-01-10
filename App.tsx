@@ -10,6 +10,9 @@ import ProjectManagement from './components/ProjectManagement';
 import TeamManagement from './components/TeamManagement';
 import ProjectWizard from './components/ProjectWizard';
 import { GovernancePortal } from './components/GovernancePortal';
+import { LoginLanding } from './components/LoginLanding';
+import { HelpCenter } from './components/HelpCenter';
+import { AdminPanel } from './components/AdminPanel';
 import { FinancialDashboard } from './components/FinancialDashboard';
 import OrgCanvas from './components/OrgCanvas';
 import MyWork from './components/MyWork';
@@ -46,7 +49,8 @@ import {
   Palette,
   UserPlus,
   Zap,
-  Trash2
+  Trash2,
+  HelpCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CuratorshipAdmin from './components/CuratorshipAdmin';
@@ -119,6 +123,7 @@ const App: React.FC = () => {
   }, [nodes, edges]);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [helpCenterOpen, setHelpCenterOpen] = useState(false);
 
   const audiovisualInField = useMemo(() => {
     return team.filter(t => t.sector === 'Audiovisual' && (t.name === 'Marco' || t.name === 'Ruan'));
@@ -126,7 +131,7 @@ const App: React.FC = () => {
 
   return (
     <div className="flex h-screen w-screen bg-background overflow-hidden font-sans text-foreground selection:bg-zinc-500/30">
-      {!userConsent && <GovernancePortal />}
+      {!userConsent && <LoginLanding />}
       
       {/* Sidebar Nav (Linear Standard) */}
       <aside className={`
@@ -277,6 +282,13 @@ const App: React.FC = () => {
                 </div>
                 <div className="w-px h-10 bg-zinc-200 dark:bg-white/5 mx-2 hidden sm:block"></div>
                 <ThemeLanguageToggle />
+               <button 
+                 onClick={() => setHelpCenterOpen(true)}
+                 className="hidden md:block text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors relative group"
+                 title="Central de Ajuda"
+               >
+                 <HelpCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
+               </button>
                <button className="hidden md:block text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors relative group">
                  <Bell className="w-5 h-5 group-hover:scale-110 transition-transform" />
                  <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-brand-neon-purple rounded-full border-2 border-white dark:border-brand-900"></span>
@@ -329,9 +341,9 @@ const App: React.FC = () => {
               {activeTab === 'profile' && <PlaceholderView title="Meu Perfil" description="Configurações de perfil em desenvolvimento" icon={UserPlus} />}
               {activeTab === 'automation' && <PlaceholderView title="Automações" description="Configuração de automações em desenvolvimento" icon={Zap} />}
               {activeTab === 'trash' && <PlaceholderView title="Lixeira" description="Itens excluídos em desenvolvimento" icon={Trash2} />}
-              {activeTab === 'admin' && <GovernancePortal />}
-              {activeTab === 'login' && <GovernancePortal />}
-              {activeTab === 'register' && <GovernancePortal />}
+              {activeTab === 'admin' && <AdminPanel />}
+              {activeTab === 'login' && <LoginLanding />}
+              {activeTab === 'register' && <LoginLanding />}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -339,6 +351,9 @@ const App: React.FC = () => {
 
       {/* Feedback FAB */}
       <FeedbackFAB />
+      
+      {/* Help Center Drawer */}
+      <HelpCenter isOpen={helpCenterOpen} onClose={() => setHelpCenterOpen(false)} />
     </div>
   );
 };

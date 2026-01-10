@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import ReactFlow, {
   Node,
   Edge,
@@ -16,6 +16,8 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import { useStore } from '../store';
 import { TeamMember, AvailabilityStatus } from '../types';
+import { supabase } from '../services/supabase';
+import { UserNode } from './UserNode';
 import {
   User,
   X,
@@ -184,6 +186,7 @@ const PositionNode = ({ data, selected }: { data: PositionNodeData; selected?: b
 const nodeTypes: NodeTypes = {
   member: MemberNode,
   position: PositionNode,
+  user: UserNode,
 };
 
 // ============================================
@@ -498,6 +501,20 @@ const OrgCanvas: React.FC = () => {
     }
   }, []);
 
+  const handleConnect = useCallback((params: Connection) => {
+    if (!params.source || !params.target) return;
+    
+    const newEdge = {
+      id: `edge-${params.source}-${params.target}`,
+      source: params.source,
+      target: params.target,
+      type: 'smoothstep',
+      style: { stroke: '#CBD5E1', strokeWidth: 2 },
+    };
+    
+    setEdges((eds) => [...eds, newEdge]);
+  }, [setEdges]);
+
   const handleUpdateMember = useCallback(
     (id: string, updates: Partial<TeamMember>) => {
       updateTeamMember(id, updates);
@@ -528,11 +545,13 @@ const OrgCanvas: React.FC = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeClick={handleNodeClick}
+        onConnect={handleConnect}
         nodeTypes={nodeTypes}
         fitView
         minZoom={0.1}
         maxZoom={2}
         defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
+        connectionMode="loose"
       >
         <Background color="#CBD5E1" gap={24} size={1} variant="dots" />
         <Controls className="!bg-white !border !border-slate-300 !rounded-md !shadow-sm" />

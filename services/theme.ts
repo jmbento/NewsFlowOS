@@ -31,7 +31,7 @@ export const theme = {
    */
   getTheme: (): Theme => {
     const saved = localStorage.getItem('newsflow_theme') as Theme;
-    return saved || 'light'; // Light Precision como padrão
+    return saved || 'dark'; // Dark Mode Premium como padrão
   },
 
   /**

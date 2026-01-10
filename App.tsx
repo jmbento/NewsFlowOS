@@ -205,6 +205,9 @@ const App: React.FC = () => {
             <button onClick={() => setActiveTab('brand-hub')} className={`sidebar-item w-full ${activeTab === 'brand-hub' ? 'sidebar-item-active' : ''}`}>
               <Palette className="w-4 h-4" /> <span>Brand Hub</span>
             </button>
+            <button onClick={() => setActiveTab('calendar')} className={`sidebar-item w-full ${activeTab === 'calendar' ? 'sidebar-item-active' : ''}`}>
+              <Calendar className="w-4 h-4" /> <span>Agenda</span>
+            </button>
 
           <div className="pt-6 px-3 py-2 text-[10px] font-bold text-[#A0A0A0] uppercase tracking-widest">Comercial & Finanças</div>
           <button onClick={() => setActiveTab('sales')} className={`sidebar-item w-full ${activeTab === 'sales' ? 'sidebar-item-active' : ''}`}>

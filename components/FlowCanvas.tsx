@@ -440,7 +440,18 @@ const FlowInner = () => {
       </ReactFlow>
 
       {menu && <ContextMenu {...menu} onEdit={setEditingNodeId} onClose={() => setMenu(null)} />}
-      {paneMenu && <PaneContextMenu {...paneMenu} onClose={() => setPaneMenu(null)} />}
+      {paneMenu && (
+        <PaneContextMenu 
+          {...paneMenu} 
+          onClose={() => setPaneMenu(null)} 
+          onGroup={() => {
+            const selectedCount = nodes.filter(n => n.selected).length;
+            if (selectedCount > 0) {
+              setShowGroupDialog(true);
+            }
+          }}
+        />
+      )}
       {editingNodeId && <EditModal nodeId={editingNodeId} onClose={() => setEditingNodeId(null)} />}
       <NodeInspector />
 

@@ -18,7 +18,9 @@ interface Workspace {
 const DEBOUNCE_DELAY = 2000; // 2 segundos
 
 export function useAutosave(workspaceId: string | null) {
-  const { nodes, edges } = useStore();
+  // Usar seletores do Zustand para evitar re-renders desnecessários
+  const nodes = useStore((state) => state?.nodes || []);
+  const edges = useStore((state) => state?.edges || []);
   const [syncStatus, setSyncStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastSavedRef = useRef<string>('');
@@ -26,6 +28,12 @@ export function useAutosave(workspaceId: string | null) {
   // Função para salvar no Supabase
   const saveWorkspace = async (workspaceId: string) => {
     try {
+      // Verificação de segurança
+      if (!nodes || !Array.isArray(nodes) || !edges || !Array.isArray(edges)) {
+        console.warn('⚠️ [AUTOSAVE] Nodes ou edges não estão disponíveis ainda');
+        return;
+      }
+
       setSyncStatus('saving');
       
       const layoutJson = {

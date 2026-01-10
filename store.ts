@@ -1690,19 +1690,20 @@ export const useStore = create<AppState>((set, get) => ({
     
     if (selectedNodes.length === 0) return;
 
-    // Calcular bounding box dos nodes selecionados
+    // Calcular bounding box dos nodes selecionados usando coordenadas do Canvas
     const positions = selectedNodes.map(n => n.position);
     const minX = Math.min(...positions.map(p => p.x));
     const minY = Math.min(...positions.map(p => p.y));
     const maxX = Math.max(...positions.map(p => p.x));
     const maxY = Math.max(...positions.map(p => p.y));
 
-    const groupWidth = maxX - minX + 400;
-    const groupHeight = maxY - minY + 200;
+    // Calcular dimensões do grupo baseado nas posições reais
+    const groupWidth = Math.max(300, maxX - minX + 400);
+    const groupHeight = Math.max(200, maxY - minY + 200);
     const groupX = minX - 50;
     const groupY = minY - 50;
 
-    // Criar node do tipo Group
+    // Criar node do tipo Group na posição calculada
     const groupId = `group-${Date.now()}`;
     addNode('custom_action', { x: groupX, y: groupY }, {
       label: groupName,

@@ -38,7 +38,9 @@ import {
   Users,
   Zap,
   RotateCcw,
-  Package
+  Package,
+  Layout,
+  Video
 } from 'lucide-react';
 
 const nodeTypes = {
@@ -244,13 +246,29 @@ const EditModal = ({ nodeId, onClose }: { nodeId: string, onClose: () => void })
 
   const [error, setError] = useState<string | null>(null);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.label.trim()) {
       setError("O título do componente não pode estar vazio.");
       return;
     }
-    updateNodeData(nodeId, formData);
-    onClose();
+    
+    // Validar campos obrigatórios para Matéria Especial
+    if ((node.type === 'print' || node.type === 'site') && (!formData.diagramacao || !formData.prazo || !formData.edicaoDia)) {
+      setError("Preencha todos os campos obrigatórios: Diagramação, Prazo e Data Edição.");
+      return;
+    }
+    
+    try {
+      await updateNodeData(nodeId, {
+        ...formData,
+        // Garantir compatibilidade
+        layout: formData.diagramacao || formData.layout,
+        editionDate: formData.edicaoDia || formData.editionDate,
+      });
+      onClose();
+    } catch (err: any) {
+      setError("Erro ao salvar: " + err.message);
+    }
   };
 
   return (
@@ -266,7 +284,7 @@ const EditModal = ({ nodeId, onClose }: { nodeId: string, onClose: () => void })
           </button>
         </div>
         
-        <div className="p-6 space-y-5 bg-white">
+        <div className="p-6 space-y-5 bg-white max-h-[70vh] overflow-y-auto custom-scrollbar">
           <div className="space-y-2">
             <label className="text-label text-slate-600 flex items-center gap-2">
                <Cpu className="w-3.5 h-3.5" /> Título do Componente
@@ -276,6 +294,7 @@ const EditModal = ({ nodeId, onClose }: { nodeId: string, onClose: () => void })
               value={formData.label}
               onChange={e => { setFormData({...formData, label: e.target.value}); setError(null); }}
               className={`w-full bg-white border ${error ? 'border-red-300' : 'border-slate-300'} rounded-md px-4 py-3 text-sm text-slate-900 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400/20 transition-all placeholder:text-slate-400`}
+              style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif' }}
               placeholder="Digite o título..."
             />
             {error && <p className="text-xs text-red-600 font-semibold">{error}</p>}
@@ -325,9 +344,103 @@ const EditModal = ({ nodeId, onClose }: { nodeId: string, onClose: () => void })
               value={formData.description}
               onChange={e => setFormData({...formData, description: e.target.value})}
               className="w-full bg-white border border-slate-300 rounded-md px-4 py-3 text-sm text-slate-900 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400/20 resize-none placeholder:text-slate-400" 
+              style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif' }}
               placeholder="Adicione notas ou descrição..."
             />
           </div>
+
+          {/* Campos Audiovisual */}
+          {(node.type === 'video' || node.type === 'podcast') && (
+            <div className="space-y-3 border-t border-slate-200 pt-4">
+              <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                <Video className="w-4 h-4 text-purple-600" />
+                Workflow Audiovisual
+              </h3>
+              <div className="space-y-2">
+                <label className="text-label text-slate-600">Roteiro/Briefing</label>
+                <textarea
+                  value={formData.roteiroBriefing}
+                  onChange={e => {
+                    const text = e.target.value;
+                    setFormData({...formData, roteiroBriefing: text});
+                    // Estimativa simples: 1 página ≈ 2 horas de edição
+                    const pages = text.split('\n').filter(l => l.trim().length > 0).length;
+                    const estimated = Math.max(2, pages * 2);
+                    setFormData(prev => ({...prev, estimatedTime: estimated}));
+                  }}
+                  className="w-full bg-white border border-slate-300 rounded-md px-4 py-3 text-sm text-slate-900 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400/20 transition-all placeholder:text-slate-400 resize-none"
+                  style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif', minHeight: '100px' }}
+                  placeholder="Cole ou digite o roteiro/briefing aqui..."
+                />
+                {formData.estimatedTime > 0 && (
+                  <div className="text-xs text-purple-600 bg-purple-50 border border-purple-200 rounded-lg px-3 py-2">
+                    ⏱️ Estimativa de tempo: {formData.estimatedTime} horas
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Campos Matéria Especial */}
+          {(node.type === 'print' || node.type === 'site') && (
+            <div className="space-y-3 border-t border-slate-200 pt-4">
+              <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                <Layout className="w-4 h-4 text-emerald-600" />
+                Matéria Especial
+              </h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <label className="text-label text-slate-600">Nº Páginas</label>
+                  <input
+                    type="number"
+                    value={formData.numPages}
+                    onChange={e => setFormData({...formData, numPages: parseInt(e.target.value) || 0})}
+                    className="w-full bg-white border border-slate-300 rounded-md px-4 py-2 text-sm text-slate-900 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+                    style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif' }}
+                    placeholder="0"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-label text-slate-600">Prazo *</label>
+                  <input
+                    type="date"
+                    value={formData.prazo}
+                    onChange={e => setFormData({...formData, prazo: e.target.value})}
+                    className="w-full bg-white border border-slate-300 rounded-md px-4 py-2 text-sm text-slate-900 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+                    style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif' }}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-label text-slate-600">Diagramação *</label>
+                <input
+                  type="text"
+                  value={formData.diagramacao}
+                  onChange={e => setFormData({...formData, diagramacao: e.target.value, layout: e.target.value})}
+                  className="w-full bg-white border border-slate-300 rounded-md px-4 py-2 text-sm text-slate-900 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+                  style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif' }}
+                  placeholder="Ex: 2 colunas, Full page, etc"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-label text-slate-600">Data Edição (__/__/____) *</label>
+                <input
+                  type="text"
+                  value={formData.edicaoDia}
+                  onChange={e => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 2) value = value.slice(0, 2) + '/' + value.slice(2);
+                    if (value.length >= 5) value = value.slice(0, 5) + '/' + value.slice(5, 9);
+                    setFormData({...formData, edicaoDia: value, editionDate: value});
+                  }}
+                  className="w-full bg-white border border-slate-300 rounded-md px-4 py-2 text-sm text-slate-900 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+                  style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif' }}
+                  placeholder="__/__/____"
+                  maxLength={10}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="p-6 bg-slate-50 border-t border-slate-200 flex gap-3 justify-end items-center">

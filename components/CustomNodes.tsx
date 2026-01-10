@@ -270,8 +270,16 @@ export const N8NBaseNode = ({
     connectedEdges.forEach(edge => {
       deleteEdge(edge.id);
     });
-    // Limpar herança no label
-    updateNodeData(id, { parentCampaignId: undefined });
+    // Limpar herança no label e resetar dados relacionados
+    const currentData = nodes.find(n => n.id === id)?.data;
+    updateNodeData(id, { 
+      parentCampaignId: undefined,
+    });
+    // Forçar atualização do label para remover herança visual
+    if (currentData?.label?.includes(' - ')) {
+      const baseLabel = currentData.label.split(' - ')[1] || currentData.label;
+      updateNodeData(id, { label: baseLabel });
+    }
   };
 
   // Context menu handler

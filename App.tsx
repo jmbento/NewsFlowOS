@@ -42,7 +42,10 @@ import {
   Wallet,
   BookOpen,
   TrendingUp,
-  Palette
+  Palette,
+  UserPlus,
+  Zap,
+  Trash2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CuratorshipAdmin from './components/CuratorshipAdmin';

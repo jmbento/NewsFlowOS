@@ -14,7 +14,7 @@ import {
   Info,
   Instagram,
   Facebook,
-  TikTok,
+  Video,
   Edit,
   Plus,
   CheckCircle2
@@ -45,7 +45,7 @@ const NODE_TYPE_LABELS: Record<string, string> = {
   demand: 'DEMANDA',
 };
 // Ícones oficiais para PUBLICAÇÃO
-const PUBLICATION_ICONS = [Instagram, Facebook, TikTok, Globe, FileText];
+const PUBLICATION_ICONS = [Instagram, Facebook, Video, Globe, FileText];
 
 const NODE_TYPE_ICONS: Record<string, any> = {
   campaign: Layers,

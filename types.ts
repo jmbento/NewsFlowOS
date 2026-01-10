@@ -254,6 +254,15 @@ export interface NodeData {
 
   // Herança de Nome
   parentCampaignId?: string; // ID da campanha/OS raiz
+
+  // Audiovisual - Roteiro e Estimativa
+  roteiroBriefing?: string; // Texto do roteiro/briefing
+  estimatedTime?: number; // Estimativa de horas (calculada por AI)
+  
+  // Matéria Especial - Campos obrigatórios
+  diagramacao?: string; // Diagramação obrigatória
+  prazo?: string; // Prazo obrigatório
+  edicaoDia?: string; // Edição do Dia (formato: __/__/____)
 }
 
 // Feedback System

@@ -229,7 +229,17 @@ const EditModal = ({ nodeId, onClose }: { nodeId: string, onClose: () => void })
     dueDate: node.data.dueDate || '',
     deadline: node.data.deadline || '',
     editoria: node.data.editoria || '',
-    status: node.data.status
+    status: node.data.status,
+    // Audiovisual
+    roteiroBriefing: node.data.roteiroBriefing || '',
+    estimatedTime: node.data.estimatedTime || 0,
+    // Matéria Especial
+    numPages: node.data.numPages || 0,
+    layout: node.data.layout || node.data.diagramacao || '',
+    diagramacao: node.data.diagramacao || node.data.layout || '',
+    editionDate: node.data.editionDate || node.data.edicaoDia || '',
+    edicaoDia: node.data.edicaoDia || node.data.editionDate || '',
+    prazo: node.data.prazo || '',
   });
 
   const [error, setError] = useState<string | null>(null);

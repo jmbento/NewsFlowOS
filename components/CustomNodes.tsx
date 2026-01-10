@@ -345,38 +345,80 @@ export const N8NBaseNode = ({
             <div className={`w-2 h-2 rounded-full ${status.color}`} title={status.label} />
           </div>
 
-          {/* Workflow Steps */}
+          {/* Workflow Steps com Timeline */}
           {workflowSteps.length > 0 && (
-            <div className="space-y-1">
-              {workflowSteps.map((step, idx) => {
-                const stepKey = `step_${idx}`;
-                const isDone = data.workflowProgress?.[stepKey] || false;
-                return (
-                  <div key={idx} className="flex items-center gap-2 text-xs">
-                    <div className={`w-1.5 h-1.5 rounded-full ${isDone ? 'bg-emerald-500' : 'bg-slate-300'}`} />
-                    <span className={`text-slate-700 ${isDone ? 'line-through' : ''}`}>{step}</span>
-                  </div>
-                );
-              })}
+            <div className="space-y-2">
+              {/* Barra de Progresso Visual */}
+              <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div 
+                  className="bg-purple-600 h-full transition-all duration-300"
+                  style={{ 
+                    width: `${((workflowSteps.findIndex((_, idx) => {
+                      const stepKey = `step_${idx}`;
+                      return !data.workflowProgress?.[stepKey];
+                    }) === -1 ? workflowSteps.length : workflowSteps.findIndex((_, idx) => {
+                      const stepKey = `step_${idx}`;
+                      return !data.workflowProgress?.[stepKey];
+                    })) / workflowSteps.length) * 100}%`
+                  }}
+                />
+              </div>
+              
+              {/* Lista de Etapas */}
+              <div className="space-y-1.5">
+                {workflowSteps.map((step, idx) => {
+                  const stepKey = `step_${idx}`;
+                  const isDone = data.workflowProgress?.[stepKey] || false;
+                  const isCurrent = idx === workflowSteps.findIndex((_, i) => {
+                    const k = `step_${i}`;
+                    return !data.workflowProgress?.[k];
+                  });
+                  
+                  return (
+                    <div key={idx} className="flex items-center gap-2 text-xs">
+                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                        isDone ? 'bg-emerald-500' : isCurrent ? 'bg-purple-600 animate-pulse' : 'bg-slate-300'
+                      }`} />
+                      <span className={`text-slate-700 ${isDone ? 'line-through text-slate-500' : isCurrent ? 'font-semibold text-purple-700' : ''}`}>
+                        {step}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
 
           {/* Campos específicos para MATÉRIA ESPECIAL */}
-          {nodeType === 'print' && (
-            <div className="space-y-1 text-xs">
-              {data.numPages && (
-                <div className="text-slate-700">
-                  <span className="font-semibold">Páginas:</span> {data.numPages}
-                </div>
-              )}
-              {data.layout && (
-                <div className="text-slate-700">
-                  <span className="font-semibold">Diagramação:</span> {data.layout}
-                </div>
-              )}
-              {data.editionDate && (
-                <div className="text-slate-700">
-                  <span className="font-semibold">Data Edição:</span> {data.editionDate}
+          {(nodeType === 'print' || nodeType === 'site') && (
+            <div className="space-y-2 text-xs border-t border-slate-200 pt-2 mt-2">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-slate-900">Nº Páginas:</span>
+                <span className="text-slate-700">{data.numPages || 'Não definido'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-slate-900">Diagramação:</span>
+                <span className="text-slate-700">{data.layout || 'Não definido'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-slate-900">Data Edição:</span>
+                <span className="text-slate-700">{data.editionDate || '__/__/____'}</span>
+              </div>
+            </div>
+          )}
+
+          {/* Campos específicos para AUDIOVISUAL */}
+          {(nodeType === 'video' || nodeType === 'podcast') && (
+            <div className="space-y-2 text-xs border-t border-slate-200 pt-2 mt-2">
+              {data.roteiroBriefing && (
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-2">
+                  <div className="font-semibold text-purple-900 mb-1">Roteiro/Briefing:</div>
+                  <div className="text-purple-700 text-[10px] line-clamp-2">{data.roteiroBriefing}</div>
+                  {data.estimatedTime && (
+                    <div className="mt-1 text-[10px] text-purple-600">
+                      ⏱️ Estimativa: {data.estimatedTime}h
+                    </div>
+                  )}
                 </div>
               )}
             </div>

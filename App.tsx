@@ -55,6 +55,7 @@ import { ROICalculator } from './services/roi_calculator';
 import { Dashboard } from './components/Dashboard';
 import { OnboardingGuide } from './components/OnboardingGuide';
 import ThemeLanguageToggle from './components/ThemeLanguageToggle';
+import StatusSelector from './components/StatusSelector';
 import { theme } from './services/theme';
 
 const SpaceBackground = () => {

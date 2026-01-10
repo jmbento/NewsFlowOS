@@ -6,10 +6,14 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 // Validar variáveis de ambiente
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('❌ ERRO: Variáveis de ambiente do Supabase não configuradas!');
-  console.error('VITE_SUPABASE_URL:', supabaseUrl || 'NÃO DEFINIDA');
-  console.error('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'DEFINIDA' : 'NÃO DEFINIDA');
-  console.error('💡 Configure as variáveis no Vercel: Settings → Environment Variables');
+  console.warn('⚠️ AVISO: Variáveis de ambiente do Supabase não configuradas!');
+  console.warn('VITE_SUPABASE_URL:', supabaseUrl || 'NÃO DEFINIDA');
+  console.warn('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'DEFINIDA (oculta)' : 'NÃO DEFINIDA');
+  console.warn('💡 Configure as variáveis no Vercel: Settings → Environment Variables');
+  console.warn('💡 Continuando em modo offline...');
+} else {
+  console.log('✅ [SUPABASE] Variáveis de ambiente configuradas');
+  console.log('✅ [SUPABASE] URL:', supabaseUrl.substring(0, 30) + '...');
 }
 
 // Criar cliente mesmo sem variáveis para evitar crash (modo offline)

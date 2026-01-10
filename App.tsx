@@ -107,8 +107,14 @@ const App: React.FC = () => {
 
   // Inicialização do Sistema
   useEffect(() => {
-    initialize();
-    theme.init();
+    console.log('🚀 [APP] Inicializando NewsFlow OS...');
+    try {
+      initialize();
+      theme.init();
+      console.log('✅ [APP] Inicialização concluída');
+    } catch (error) {
+      console.error('❌ [APP] Erro na inicialização:', error);
+    }
   }, [initialize]);
 
   // Status de Sincronização Visual

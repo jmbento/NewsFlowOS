@@ -4,12 +4,19 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
+// Validar variáveis de ambiente
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Variáveis de ambiente do Supabase não configuradas. Usando modo offline.');
-  // No build do Vercel, as variáveis serão injetadas em runtime
+  console.error('❌ ERRO: Variáveis de ambiente do Supabase não configuradas!');
+  console.error('VITE_SUPABASE_URL:', supabaseUrl || 'NÃO DEFINIDA');
+  console.error('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'DEFINIDA' : 'NÃO DEFINIDA');
+  console.error('💡 Configure as variáveis no Vercel: Settings → Environment Variables');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Criar cliente mesmo sem variáveis para evitar crash (modo offline)
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder-key'
+);
 
 export const checkConnection = async (): Promise<{ online: boolean; latency: number }> => {
   const start = performance.now();

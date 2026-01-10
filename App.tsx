@@ -16,6 +16,7 @@ import MyWork from './components/MyWork';
 import MasterDashboard from './components/MasterDashboard';
 import BrandHub from './components/BrandHub';
 import PlaceholderView from './components/PlaceholderView';
+import { Home } from './components/Home';
 import { 
   LayoutDashboard, 
   Workflow, 
@@ -175,6 +176,14 @@ const App: React.FC = () => {
             <TrendingUp className="w-4 h-4" /> <span>Relatórios</span>
           </button>
 
+          <div className="pt-6 px-3 py-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Acesso</div>
+          <button onClick={() => setActiveTab('login')} className={`sidebar-item w-full ${activeTab === 'login' ? 'sidebar-item-active' : ''}`}>
+            <ShieldCheck className="w-4 h-4" /> <span>Login Equipe/Admin</span>
+          </button>
+          <button onClick={() => setActiveTab('register')} className={`sidebar-item w-full ${activeTab === 'register' ? 'sidebar-item-active' : ''}`}>
+            <UserPlus className="w-4 h-4" /> <span>Cadastro de Equipe</span>
+          </button>
+
           <div className="pt-6 px-3 py-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Administração</div>
           <button onClick={() => setActiveTab('master-dashboard')} className={`sidebar-item w-full ${activeTab === 'master-dashboard' ? 'sidebar-item-active' : ''}`}>
             <BarChart3 className="w-4 h-4" /> <span>Dashboard Master</span>
@@ -189,7 +198,7 @@ const App: React.FC = () => {
             <Trash2 className="w-4 h-4" /> <span>Lixeira</span>
           </button>
           <button onClick={() => setActiveTab('admin')} className={`sidebar-item w-full ${activeTab === 'admin' ? 'sidebar-item-active' : ''}`}>
-            <ShieldCheck className="w-4 h-4" /> <span>Administração</span>
+            <ShieldCheck className="w-4 h-4" /> <span>Portal Administrativo</span>
           </button>
           <button onClick={() => setActiveTab('team')} className={`sidebar-item w-full ${activeTab === 'team' ? 'sidebar-item-active' : ''}`}>
             <Users className="w-4 h-4" /> <span>Equipes</span>
@@ -300,7 +309,7 @@ const App: React.FC = () => {
               transition={{ duration: 0.3 }}
               className="w-full h-full"
             >
-              {activeTab === 'home' && <PlaceholderView title="Página Inicial" description="Dashboard principal em desenvolvimento" icon={LayoutDashboard} />}
+              {activeTab === 'home' && <Home />}
               {activeTab === 'canvas' && <FlowCanvas />}
               {activeTab === 'my-work' && <MyWork />}
               {activeTab === 'master-dashboard' && <MasterDashboard />}
@@ -329,7 +338,9 @@ const App: React.FC = () => {
               {activeTab === 'profile' && <PlaceholderView title="Meu Perfil" description="Configurações de perfil em desenvolvimento" icon={UserPlus} />}
               {activeTab === 'automation' && <PlaceholderView title="Automações" description="Configuração de automações em desenvolvimento" icon={Zap} />}
               {activeTab === 'trash' && <PlaceholderView title="Lixeira" description="Itens excluídos em desenvolvimento" icon={Trash2} />}
-              {activeTab === 'admin' && <PlaceholderView title="Administração" description="Painel administrativo em desenvolvimento" icon={ShieldCheck} />}
+              {activeTab === 'admin' && <GovernancePortal />}
+              {activeTab === 'login' && <GovernancePortal />}
+              {activeTab === 'register' && <GovernancePortal />}
             </motion.div>
           </AnimatePresence>
         </div>

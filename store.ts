@@ -1589,7 +1589,8 @@ export const useStore = create<AppState>((set, get) => ({
     }));
 
     try {
-      await supabase.from('feedbacks').insert({
+      // Tentar inserir na tabela 'system_feedback', fallback para 'feedbacks'
+      const { error: error1 } = await supabase.from('system_feedback').insert({
         id: newFeedback.id,
         message: newFeedback.message,
         category: newFeedback.category,
@@ -1599,6 +1600,21 @@ export const useStore = create<AppState>((set, get) => ({
         submitted_at: newFeedback.submittedAt,
         status: 'PENDING',
       });
+
+      if (error1) {
+        // Fallback para tabela 'feedbacks' se 'system_feedback' não existir
+        const { error: error2 } = await supabase.from('feedbacks').insert({
+          id: newFeedback.id,
+          message: newFeedback.message,
+          category: newFeedback.category,
+          attachment: newFeedback.attachment,
+          attachment_name: newFeedback.attachmentName,
+          submitted_by: newFeedback.submittedBy,
+          submitted_at: newFeedback.submittedAt,
+          status: 'PENDING',
+        });
+        if (error2) throw error2;
+      }
       console.log(`✅ [FEEDBACK]: Feedback enviado com sucesso.`);
     } catch (err) {
       console.warn("Failed to save feedback in Supabase:", err);

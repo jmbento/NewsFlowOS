@@ -208,20 +208,20 @@ const LeadCard = ({ lead, ...props }: { lead: Lead } & any) => {
   const config = STATUS_CONFIG[lead.status];
 
   return (
-    <motion.div layout className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-4 rounded-xl space-y-3 hover:border-yellow-500 dark:hover:border-yellow-500 transition-all cursor-pointer group shadow-sm hover:shadow-md">
+    <motion.div layout className="bg-white border border-slate-300 p-4 rounded-md space-y-3 hover:border-purple-500 transition-all cursor-pointer group shadow-sm hover:shadow-md">
       <div className="flex justify-between items-start">
-        <h4 className="text-xs font-black text-zinc-900 dark:text-white uppercase italic tracking-tight">{lead.data.projectName}</h4>
-        <config.icon className={`w-3.5 h-3.5 ${config.color.split(' ')[1]}`} />
+        <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-tight">{lead.data.projectName}</h4>
+        <config.icon className={`w-4 h-4 ${config.color.split(' ')[1]}`} />
       </div>
 
-      <div className="flex items-center gap-2 text-zinc-500">
-        <User className="w-3 h-3" />
-        <span className="text-[10px] font-medium">{lead.data.clientName}</span>
+      <div className="flex items-center gap-2 text-slate-600">
+        <User className="w-3.5 h-3.5" />
+        <span className="text-xs font-medium">{lead.data.clientName}</span>
       </div>
 
-      <div className="flex items-center justify-between text-[11px] font-black text-zinc-900 dark:text-white pt-2 uppercase italic tracking-widest">
+      <div className="flex items-center justify-between text-xs font-semibold text-slate-900 pt-2 uppercase tracking-wide">
          <span>R$ {(lead.data.totalValue || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-         <span className="text-zinc-400 dark:text-zinc-500 font-bold">{lead.data.targetCities?.length || 0} Praças</span>
+         <span className="text-slate-500 font-medium">{lead.data.targetCities?.length || 0} Praças</span>
       </div>
 
       <div className="flex gap-1.5 pt-2">
@@ -229,7 +229,7 @@ const LeadCard = ({ lead, ...props }: { lead: Lead } & any) => {
            <>
               <button 
                 onClick={() => updateLeadStatus(lead.id, 'WON')}
-                className="flex-1 py-1.5 bg-emerald-500/10 text-emerald-500 rounded text-[10px] font-bold hover:bg-emerald-500 hover:text-white transition-colors border border-emerald-500/20"
+                className="flex-1 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-md text-xs font-semibold hover:bg-emerald-500 hover:text-white transition-colors border border-emerald-500/20"
               >
                 Ativar
               </button>
@@ -239,7 +239,7 @@ const LeadCard = ({ lead, ...props }: { lead: Lead } & any) => {
                   const cur = stages.indexOf(lead.status);
                   if (cur < stages.length - 1) updateLeadStatus(lead.id, stages[cur + 1]);
                 }}
-                className="p-2 bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-400 hover:text-yellow-500 transition-all"
+                className="p-2 bg-slate-100 border border-slate-300 rounded-md text-slate-600 hover:text-purple-600 transition-all"
               >
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
@@ -247,7 +247,7 @@ const LeadCard = ({ lead, ...props }: { lead: Lead } & any) => {
                 <>
                   <button 
                     onClick={() => useStore.getState().triggerProposalViewedAlert(lead.id)}
-                    className="p-1.5 bg-brand-neon-blue/10 border border-brand-neon-blue/20 rounded text-brand-neon-blue hover:bg-brand-neon-blue hover:text-white"
+                    className="p-1.5 bg-blue-500/10 border border-blue-500/20 rounded-md text-blue-600 hover:bg-blue-500 hover:text-white"
                     title="Visualizar proposta"
                   >
                     <Globe className="w-3.5 h-3.5" />
@@ -267,7 +267,7 @@ const LeadCard = ({ lead, ...props }: { lead: Lead } & any) => {
                       a.click();
                       URL.revokeObjectURL(url);
                     }}
-                    className="p-1.5 bg-purple-500/10 border border-purple-500/20 rounded text-purple-600 hover:bg-purple-500 hover:text-white"
+                    className="p-1.5 bg-purple-500/10 border border-purple-500/20 rounded-md text-purple-600 hover:bg-purple-500 hover:text-white"
                     title="Gerar proposta via IA"
                   >
                     <FileText className="w-3.5 h-3.5" />
@@ -293,18 +293,18 @@ const SalesCRM = () => {
   const columns: LeadStatus[] = ['PROSPECT', 'PITCH', 'PROPOSAL', 'NEGOTIATION', 'WON'];
 
   return (
-    <div className="w-full h-full bg-white dark:bg-[#09090b] p-8 flex flex-col overflow-hidden">
+    <div className="w-full h-full bg-slate-50 p-8 flex flex-col overflow-hidden">
       <div className="flex items-center justify-between mb-10">
         <div>
-          <h2 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight uppercase italic">Fluxo <span className="text-yellow-500">Comercial</span></h2>
-          <p className="text-zinc-500 text-xs mt-1 uppercase font-bold tracking-widest">Pipeline de oportunidades e fechamentos.</p>
+          <h2 className="text-2xl font-semibold text-slate-900 tracking-tight uppercase">Fluxo <span className="text-purple-600">Comercial</span></h2>
+          <p className="text-slate-600 text-sm mt-1 uppercase font-medium tracking-wide">Pipeline de oportunidades e fechamentos.</p>
         </div>
         <div className="flex items-center gap-4">
-           <div className="hidden md:block px-5 py-3 bg-zinc-50 dark:bg-[#18181b] border border-zinc-200 dark:border-[#27272a] rounded-xl shadow-sm">
-              <span className="text-[10px] text-zinc-400 dark:text-zinc-500 uppercase font-black tracking-[0.2em] block mb-1">Pipeline Ativo</span>
-              <p className="text-lg font-black text-zinc-900 dark:text-white italic">R$ {metrics.totalPipeline.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+           <div className="hidden md:block px-5 py-3 bg-white border border-slate-300 rounded-md shadow-sm">
+              <span className="text-xs text-slate-500 uppercase font-semibold tracking-wide block mb-1">Pipeline Ativo</span>
+              <p className="text-lg font-semibold text-slate-900">R$ {metrics.totalPipeline.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
            </div>
-           <button onClick={() => setIsModalOpen(true)} className="px-6 py-3.5 bg-zinc-900 dark:bg-white text-white dark:text-black rounded-xl text-sm font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl flex items-center gap-2">
+           <button onClick={() => setIsModalOpen(true)} className="px-6 py-3 bg-purple-600 text-white rounded-md text-sm font-semibold uppercase tracking-wide hover:bg-purple-700 transition-colors shadow-md flex items-center gap-2">
               <Plus className="w-5 h-5" /> Nova Oportunidade
            </button>
         </div>
@@ -314,8 +314,8 @@ const SalesCRM = () => {
         {columns.map(status => (
           <div key={status} className="flex-1 min-w-[300px] flex flex-col gap-4">
              <div className="flex items-center justify-between px-2">
-                <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.2em]">{STATUS_CONFIG[status].label}</span>
-                <span className="px-2 py-0.5 bg-zinc-100 dark:bg-white/5 rounded-full text-[10px] font-black text-zinc-400 dark:text-zinc-600">{leads.filter(l => l.status === status).length}</span>
+                <span className="text-xs font-semibold text-slate-600 uppercase tracking-wide">{STATUS_CONFIG[status].label}</span>
+                <span className="px-2 py-0.5 bg-slate-100 rounded-full text-xs font-semibold text-slate-600">{leads.filter(l => l.status === status).length}</span>
              </div>
              <div className="flex-1 space-y-3 overflow-y-auto pr-2 custom-scrollbar">
                 <AnimatePresence>

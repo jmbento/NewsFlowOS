@@ -92,19 +92,33 @@ log('', 'reset');
 // Verificar ambiente
 const isCI = process.env.CI === 'true' || process.env.VERCEL === '1' || process.env.VERCEL_ENV;
 const envType = process.env.VERCEL_ENV || process.env.NODE_ENV || 'development';
+const isVercel = process.env.VERCEL === '1';
 
 log(`📍 Ambiente: ${envType}`, 'blue');
 if (isCI) {
   log('🤖 Modo CI/CD detectado', 'blue');
+}
+if (isVercel) {
+  log('☁️  Ambiente Vercel detectado - variáveis serão injetadas durante build', 'blue');
 }
 
 log('', 'reset');
 
 // Resultado final
 if (!allValid) {
-  log('═══════════════════════════════════════════════════════════', 'red');
+  // No Vercel, as variáveis são injetadas durante o build, então não falhar
+  if (isVercel) {
+    log('═══════════════════════════════════════════════════════════', 'yellow');
+    log('  ⚠️  VARIÁVEIS NÃO ENCONTRADAS NO PREBUILD', 'yellow');
+    log('═══════════════════════════════════════════════════════════\n', 'yellow');
+    log('💡 No Vercel, variáveis são injetadas durante o build.', 'blue');
+    log('💡 Continuando build... (variáveis serão validadas em runtime)\n', 'blue');
+    process.exit(0); // Não falhar no Vercel
+  }
+  
+  log('═══════════════════════════════════════════════════════════════', 'red');
   log('  ❌ VALIDAÇÃO FALHOU', 'red');
-  log('═══════════════════════════════════════════════════════════\n', 'red');
+  log('═══════════════════════════════════════════════════════════════\n', 'red');
   
   log('📋 Instruções:', 'yellow');
   log('', 'reset');

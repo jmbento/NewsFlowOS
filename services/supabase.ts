@@ -6,6 +6,7 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Variáveis de ambiente do Supabase não configuradas. Usando modo offline.');
+  // No build do Vercel, as variáveis serão injetadas em runtime
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);

@@ -59,6 +59,8 @@ import { OnboardingGuide } from './components/OnboardingGuide';
 import ThemeLanguageToggle from './components/ThemeLanguageToggle';
 import StatusSelector from './components/StatusSelector';
 import { theme } from './services/theme';
+import { SyncIndicator } from './components/SyncIndicator';
+import { useAutosave } from './hooks/useAutosave';
 
 const SpaceBackground = () => {
   const stars = useMemo(() => {
@@ -93,9 +95,10 @@ const SpaceBackground = () => {
 };
 
 const App: React.FC = () => {
-  const { activeTab, setActiveTab, nodes, edges, initialize, team, userConsent } = useStore();
+  const { activeTab, setActiveTab, nodes, edges, initialize, team, userConsent, currentWorkspaceId } = useStore();
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const syncStatus = useAutosave(currentWorkspaceId);
 
   // Inicialização do Sistema
   useEffect(() => {
@@ -259,19 +262,7 @@ const App: React.FC = () => {
           
             <div className="flex items-center gap-2 md:gap-6 flex-shrink-0">
             <div className="hidden md:flex items-center gap-3">
-              {isSaving ? (
-                <div className="flex items-center gap-2 px-4 py-2 bg-brand-neon-blue/10 rounded-lg border-2 border-brand-neon-blue/20">
-                  <RefreshCw className="w-4 h-4 text-brand-neon-blue animate-spin" />
-                  <span className="text-xs text-brand-neon-blue font-black uppercase tracking-wider">Sincronizando...</span>
-                </div>
-              ) : lastSaved ? (
-                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 rounded-lg border-2 border-emerald-500/20">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  <span className="text-xs text-emerald-500 font-black uppercase tracking-wider">
-                    Salvo na Nuvem {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </div>
-              ) : null}
+              <SyncIndicator status={syncStatus} />
             </div>
             
             <div className="flex items-center gap-3 md:gap-5 md:pl-6 md:border-l md:border-black/10 md:dark:border-white/10">

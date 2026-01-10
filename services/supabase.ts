@@ -13,10 +13,23 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Criar cliente mesmo sem variáveis para evitar crash (modo offline)
-export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseAnonKey || 'placeholder-key'
-);
+// Em produção, as variáveis devem estar configuradas no Vercel
+let supabaseClient;
+try {
+  supabaseClient = createClient(
+    supabaseUrl || 'https://placeholder.supabase.co',
+    supabaseAnonKey || 'placeholder-key'
+  );
+} catch (error) {
+  console.error('❌ Erro ao criar cliente Supabase:', error);
+  // Criar um cliente dummy para evitar crash
+  supabaseClient = createClient(
+    'https://placeholder.supabase.co',
+    'placeholder-key'
+  );
+}
+
+export const supabase = supabaseClient;
 
 export const checkConnection = async (): Promise<{ online: boolean; latency: number }> => {
   const start = performance.now();

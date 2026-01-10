@@ -307,7 +307,9 @@ export const N8NBaseNode = ({
 
   // Workflow steps baseado no tipo
   const workflowSteps = WORKFLOW_STEPS[nodeType as keyof typeof WORKFLOW_STEPS] || [];
-  const workflowStepsArray = Array.isArray(workflowSteps) ? workflowSteps : [];
+  const workflowStepsArray = Array.isArray(workflowSteps) 
+    ? workflowSteps.filter((step: any) => step && typeof step === 'object' && step.label)
+    : [];
 
   // Contador de tempo decorrido quando status é "doing"
   useEffect(() => {

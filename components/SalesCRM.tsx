@@ -101,9 +101,9 @@ const FastQuoteModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-2xl bg-white border border-slate-300 rounded-md shadow-lg overflow-hidden flex flex-col max-h-[90vh]"
       >
-        <div className="p-6 border-b border-slate-200 flex justify-between items-center bg-white">
-           <div className="flex items-center gap-3">
-              <ZapIcon className="w-5 h-5 text-amber-500" />
+        <div className="p-6 border-b border-slate-200 flex flex-row items-center justify-between gap-3 bg-white">
+           <div className="flex flex-row items-center gap-3">
+              <ZapIcon className="w-5 h-5 text-amber-500 flex-shrink-0" />
               <h2 className="text-lg font-semibold text-slate-900">Nova Oportunidade</h2>
            </div>
            <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-md transition-colors text-slate-500 hover:text-slate-900">

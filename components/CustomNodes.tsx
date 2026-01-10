@@ -137,10 +137,11 @@ const ApprovalBadge = ({ status, onToggle }: { status: ApprovalStatus; onToggle:
         e.stopPropagation();
         onToggle();
       }}
-      className={`px-2 py-1 rounded-md text-xs font-semibold border flex items-center gap-1 transition-colors ${config.color} hover:opacity-80`}
+      className={`px-3 py-1.5 rounded-md text-xs font-semibold border flex flex-row items-center gap-2 transition-colors ${config.color} hover:opacity-80`}
       title={`Status: ${config.label}`}
+      style={{ fontFamily: 'Inter, sans-serif' }}
     >
-      <Icon className="w-3 h-3" />
+      <Icon className="w-3.5 h-3.5 flex-shrink-0" />
       <span>{config.label}</span>
     </button>
   );

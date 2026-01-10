@@ -13,6 +13,7 @@ import { GovernancePortal } from './components/GovernancePortal';
 import { LoginLanding } from './components/LoginLanding';
 import { HelpCenter } from './components/HelpCenter';
 import { AdminPanel } from './components/AdminPanel';
+import { SettingsPage } from './components/SettingsPage';
 import { FinancialDashboard } from './components/FinancialDashboard';
 import OrgCanvas from './components/OrgCanvas';
 import MyWork from './components/MyWork';
@@ -139,8 +140,10 @@ const App: React.FC = () => {
         w-[240px] bg-background border-r border-zinc-200 dark:border-zinc-800
         flex flex-col transform transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-      `}>
-        <div className="p-6 pb-4 flex flex-col gap-2">
+      `}
+      style={{ height: '100vh', overflowY: 'auto' }}
+      >
+        <div className="p-6 pb-4 flex flex-col gap-2 flex-shrink-0">
           <img 
             src="/logo_diario.png" 
             className="h-8 object-contain self-start" 
@@ -152,7 +155,7 @@ const App: React.FC = () => {
           </div>
         </div>
         
-        <nav className="flex-1 px-3 space-y-1">
+        <nav className="flex-1 px-3 space-y-1 overflow-y-auto custom-scrollbar">
           <div className="px-3 py-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Geral</div>
                     <button onClick={() => setActiveTab('home')} className={`sidebar-item w-full ${activeTab === 'home' ? 'sidebar-item-active' : ''}`}>
               <LayoutDashboard className="w-4 h-4" /> <span>Página Inicial</span>
@@ -196,9 +199,9 @@ const App: React.FC = () => {
           <button onClick={() => setActiveTab('master-dashboard')} className={`sidebar-item w-full ${activeTab === 'master-dashboard' ? 'sidebar-item-active' : ''}`}>
             <BarChart3 className="w-4 h-4" /> <span>Dashboard Master</span>
           </button>
-          <button onClick={() => setActiveTab('profile')} className={`sidebar-item w-full ${activeTab === 'profile' ? 'sidebar-item-active' : ''}`}>
-            <UserPlus className="w-4 h-4" /> <span>Meu Perfil</span>
-          </button>
+            <button onClick={() => setActiveTab('settings')} className={`sidebar-item w-full ${activeTab === 'settings' ? 'sidebar-item-active' : ''}`}>
+              <Settings className="w-4 h-4" /> <span>Configurações</span>
+            </button>
           <button onClick={() => setActiveTab('automation')} className={`sidebar-item w-full ${activeTab === 'automation' ? 'sidebar-item-active' : ''}`}>
             <Zap className="w-4 h-4" /> <span>Automações</span>
           </button>
@@ -344,6 +347,8 @@ const App: React.FC = () => {
               {activeTab === 'admin' && <AdminPanel />}
               {activeTab === 'login' && <LoginLanding />}
               {activeTab === 'register' && <LoginLanding />}
+              {activeTab === 'settings' && <SettingsPage />}
+              {activeTab === 'profile' && <SettingsPage />}
             </motion.div>
           </AnimatePresence>
         </div>

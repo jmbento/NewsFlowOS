@@ -28,7 +28,15 @@ import {
   DollarSign,
   FileCheck,
   Calendar,
-  Presentation
+  Presentation,
+  Camera,
+  Scissors,
+  Film,
+  Share2,
+  BookOpen,
+  Lightbulb,
+  Presentation as PresentationIcon,
+  PlayCircle
 } from 'lucide-react';
 
 // Node Type Color Bars (Bordas laterais coloridas)
@@ -91,14 +99,51 @@ const APPROVAL_CONFIG: Record<ApprovalStatus, { label: string; icon: any; color:
   APPROVED: { label: 'Aprovado', icon: CheckCircle, color: 'bg-emerald-100 text-emerald-700 border-emerald-300' },
 };
 
-// Workflow Steps por tipo
-const WORKFLOW_STEPS = {
-  video: ['Captação/Logística', 'Decupagem', 'Edição V1', 'Edição V2', 'Edição VF', 'Redes Sociais'],
-  podcast: ['Captação/Logística', 'Decupagem', 'Edição V1', 'Edição V2', 'Edição VF', 'Redes Sociais'],
-  print: ['Nº Páginas', 'Diagramação', 'Data Edição'],
-  site: ['Nº Páginas', 'Diagramação', 'Data Edição'],
-  campaign: ['Ideação', 'Proposta', 'Apresentação', 'Execução'],
-  os: ['Ideação', 'Proposta', 'Apresentação', 'Execução'],
+// Workflow Steps por tipo com ícones
+interface WorkflowStepConfig {
+  label: string;
+  icon: any;
+}
+
+const WORKFLOW_STEPS: Record<string, WorkflowStepConfig[]> = {
+  video: [
+    { label: 'Captação/Logística', icon: Camera },
+    { label: 'Decupagem', icon: Scissors },
+    { label: 'Edição V1', icon: Film },
+    { label: 'Edição V2', icon: Film },
+    { label: 'Edição VF', icon: Video },
+    { label: 'Redes Sociais', icon: Share2 },
+  ],
+  podcast: [
+    { label: 'Captação/Logística', icon: Camera },
+    { label: 'Decupagem', icon: Scissors },
+    { label: 'Edição V1', icon: Film },
+    { label: 'Edição V2', icon: Film },
+    { label: 'Edição VF', icon: Video },
+    { label: 'Redes Sociais', icon: Share2 },
+  ],
+  print: [
+    { label: 'Nº Páginas', icon: BookOpen },
+    { label: 'Diagramação', icon: Layout },
+    { label: 'Data Edição', icon: Calendar },
+  ],
+  site: [
+    { label: 'Nº Páginas', icon: BookOpen },
+    { label: 'Diagramação', icon: Layout },
+    { label: 'Data Edição', icon: Calendar },
+  ],
+  campaign: [
+    { label: 'Ideação', icon: Lightbulb },
+    { label: 'Proposta', icon: FileText },
+    { label: 'Apresentação', icon: PresentationIcon },
+    { label: 'Execução', icon: PlayCircle },
+  ],
+  os: [
+    { label: 'Ideação', icon: Lightbulb },
+    { label: 'Proposta', icon: FileText },
+    { label: 'Apresentação', icon: PresentationIcon },
+    { label: 'Execução', icon: PlayCircle },
+  ],
 };
 
 // Função para encontrar o node raiz (campanha/OS)
@@ -262,6 +307,7 @@ export const N8NBaseNode = ({
 
   // Workflow steps baseado no tipo
   const workflowSteps = WORKFLOW_STEPS[nodeType as keyof typeof WORKFLOW_STEPS] || [];
+  const workflowStepsArray = Array.isArray(workflowSteps) ? workflowSteps : [];
 
   // Contador de tempo decorrido quando status é "doing"
   useEffect(() => {
@@ -330,12 +376,12 @@ export const N8NBaseNode = ({
     <>
       <div 
         className={`
-          bg-white/95 backdrop-blur-[12px]
+          bg-[#1E1E1E] backdrop-blur-[12px]
           border-l-4 ${typeColor}
-          border-t border-r border-b border-slate-300
+          border-t border-r border-b border-slate-700
           rounded-md shadow-sm
           transition-all duration-150
-          ${selected ? 'ring-2 ring-purple-500 border-purple-500 shadow-lg' : 'hover:border-slate-400'}
+          ${selected ? 'ring-2 ring-[#FFD700] border-[#FFD700] shadow-lg' : 'hover:border-slate-600'}
         `}
         style={{ 
           minWidth: '200px', 
@@ -354,16 +400,16 @@ export const N8NBaseNode = ({
         />
 
         {/* Header */}
-        <div className="flex items-start justify-between gap-2 mb-2 p-3 border-b border-slate-200">
+        <div className="flex items-start justify-between gap-2 mb-2 p-3 border-b border-slate-700">
           <div className="flex items-center gap-2 flex-1">
-            <div className={`w-6 h-6 rounded flex items-center justify-center bg-slate-100`}>
-              <Icon className={`w-3.5 h-3.5 text-slate-900`} />
+            <div className={`w-6 h-6 rounded flex items-center justify-center bg-[#121212]`}>
+              <Icon className={`w-3.5 h-3.5 text-[#FFD700]`} />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-xs font-black leading-tight line-clamp-1" style={{ color: '#000000', fontWeight: 800 }}>
+              <h3 className="text-xs font-black leading-tight line-clamp-1" style={{ color: '#FFD700', fontWeight: 800 }}>
                 {NODE_TYPE_LABELS[nodeType] || title}
               </h3>
-              <p className="text-xs font-semibold text-slate-900 mt-0.5 line-clamp-1">
+              <p className="text-xs font-semibold text-[#E0E0E0] mt-0.5 line-clamp-1">
                 {inheritedLabel}
               </p>
             </div>
@@ -374,10 +420,10 @@ export const N8NBaseNode = ({
               e.stopPropagation();
               handleContextMenu(e);
             }}
-            className="p-1 hover:bg-slate-100 rounded transition-colors"
+            className="p-1 hover:bg-[#121212] rounded transition-colors"
             title="Menu"
           >
-            <MoreVertical className="w-4 h-4 text-slate-600" />
+            <MoreVertical className="w-4 h-4 text-[#FFD700]" />
           </button>
         </div>
 
@@ -390,38 +436,39 @@ export const N8NBaseNode = ({
           </div>
 
           {/* Workflow Steps com Timeline */}
-          {workflowSteps.length > 0 && (
+          {workflowStepsArray.length > 0 && (
             <div className="space-y-2">
               {/* Barra de Progresso Visual */}
-              <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+              <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
                 <div 
-                  className="bg-purple-600 h-full transition-all duration-300"
+                  className="bg-[#FFD700] h-full transition-all duration-300"
                   style={{ 
-                    width: `${((workflowSteps.findIndex((_, idx) => {
+                    width: `${((workflowStepsArray.findIndex((_, idx) => {
                       const stepKey = `step_${idx}`;
                       return !data.workflowProgress?.[stepKey];
-                    }) === -1 ? workflowSteps.length : workflowSteps.findIndex((_, idx) => {
+                    }) === -1 ? workflowStepsArray.length : workflowStepsArray.findIndex((_, idx) => {
                       const stepKey = `step_${idx}`;
                       return !data.workflowProgress?.[stepKey];
-                    })) / workflowSteps.length) * 100}%`
+                    })) / workflowStepsArray.length) * 100}%`
                   }}
                 />
               </div>
               
-              {/* Lista de Etapas com Checkboxes Interativos */}
+              {/* Lista de Etapas com Checkboxes Interativos e Ícones */}
               <div className="space-y-1.5">
-                {workflowSteps.map((step, idx) => {
+                {workflowStepsArray.map((stepConfig, idx) => {
                   const stepKey = `step_${idx}`;
                   const isDone = data.workflowProgress?.[stepKey] || false;
-                  const isCurrent = idx === workflowSteps.findIndex((_, i) => {
+                  const isCurrent = idx === workflowStepsArray.findIndex((_, i) => {
                     const k = `step_${i}`;
                     return !data.workflowProgress?.[k];
                   });
+                  const StepIcon = stepConfig.icon || FileText;
                   
                   return (
                     <label 
                       key={idx} 
-                      className="flex items-center gap-2 text-xs cursor-pointer hover:bg-slate-50 p-1 rounded transition-colors"
+                      className="flex items-center gap-2 text-xs cursor-pointer hover:bg-[#1E1E1E] p-1.5 rounded transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleWorkflowStep(idx);
@@ -432,10 +479,13 @@ export const N8NBaseNode = ({
                         checked={isDone}
                         onChange={() => toggleWorkflowStep(idx)}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-3.5 h-3.5 rounded border-slate-300 text-purple-600 focus:ring-purple-500 focus:ring-offset-0 cursor-pointer"
+                        className="w-3.5 h-3.5 rounded border-slate-600 bg-[#1E1E1E] text-[#FFD700] focus:ring-[#FFD700] focus:ring-offset-0 cursor-pointer"
                       />
-                      <span className={`text-slate-700 flex-1 ${isDone ? 'line-through text-slate-500' : isCurrent ? 'font-semibold text-purple-700' : ''}`}>
-                        {step}
+                      <StepIcon className={`w-3.5 h-3.5 flex-shrink-0 ${
+                        isDone ? 'text-slate-500' : isCurrent ? 'text-[#FFD700]' : 'text-slate-400'
+                      }`} />
+                      <span className={`text-[#E0E0E0] flex-1 ${isDone ? 'line-through text-slate-500' : isCurrent ? 'font-semibold text-[#FFD700]' : ''}`}>
+                        {stepConfig.label}
                       </span>
                     </label>
                   );
@@ -446,32 +496,39 @@ export const N8NBaseNode = ({
 
           {/* Campos específicos para MATÉRIA ESPECIAL */}
           {(nodeType === 'print' || nodeType === 'site') && (
-            <div className="space-y-2 text-xs border-t border-slate-200 pt-2 mt-2">
+            <div className="space-y-2 text-xs border-t border-slate-700 pt-2 mt-2">
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-slate-900">Nº Páginas:</span>
-                <span className="text-slate-700">{data.numPages || 'Não definido'}</span>
+                <BookOpen className="w-3.5 h-3.5 text-[#FFD700]" />
+                <span className="font-semibold text-[#E0E0E0]">Nº Páginas:</span>
+                <span className="text-[#A0A0A0]">{data.numPages || 'Não definido'}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-slate-900">Diagramação:</span>
-                <span className="text-slate-700">{data.layout || 'Não definido'}</span>
+                <Layout className="w-3.5 h-3.5 text-[#FFD700]" />
+                <span className="font-semibold text-[#E0E0E0]">Diagramação:</span>
+                <span className="text-[#A0A0A0]">{data.layout || 'Não definido'}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-slate-900">Data Edição:</span>
-                <span className="text-slate-700">{data.editionDate || '__/__/____'}</span>
+                <Calendar className="w-3.5 h-3.5 text-[#FFD700]" />
+                <span className="font-semibold text-[#E0E0E0]">Data Edição:</span>
+                <span className="text-[#A0A0A0]">{data.editionDate || '__/__/____'}</span>
               </div>
             </div>
           )}
 
           {/* Campos específicos para AUDIOVISUAL */}
           {(nodeType === 'video' || nodeType === 'podcast') && (
-            <div className="space-y-2 text-xs border-t border-slate-200 pt-2 mt-2">
+            <div className="space-y-2 text-xs border-t border-slate-700 pt-2 mt-2">
               {data.roteiroBriefing && (
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-2">
-                  <div className="font-semibold text-purple-900 mb-1">Roteiro/Briefing:</div>
-                  <div className="text-purple-700 text-[10px] line-clamp-2">{data.roteiroBriefing}</div>
+                <div className="bg-[#121212] border border-slate-700 rounded-lg p-2">
+                  <div className="font-semibold text-[#FFD700] mb-1 flex items-center gap-2">
+                    <PenTool className="w-3.5 h-3.5" />
+                    Roteiro/Briefing:
+                  </div>
+                  <div className="text-[#A0A0A0] text-[10px] line-clamp-2">{data.roteiroBriefing}</div>
                   {data.estimatedTime && (
-                    <div className="mt-1 text-[10px] text-purple-600">
-                      ⏱️ Estimativa: {data.estimatedTime}h
+                    <div className="mt-1 text-[10px] text-[#FFD700] flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      Estimativa: {data.estimatedTime}h
                     </div>
                   )}
                 </div>
@@ -481,22 +538,22 @@ export const N8NBaseNode = ({
 
           {/* Campos específicos para COMERCIAL */}
           {(nodeType === 'campaign' || nodeType === 'os') && (
-            <div className="space-y-2 text-xs border-t border-slate-200 pt-2 mt-2">
+            <div className="space-y-2 text-xs border-t border-slate-700 pt-2 mt-2">
               {data.proposalValue !== undefined && (
                 <div className="flex items-center gap-2">
-                  <DollarSign className="w-3.5 h-3.5 text-amber-600" />
-                  <span className="font-semibold text-slate-900">Valor da Proposta:</span>
-                  <span className="text-slate-700">R$ {data.proposalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  <DollarSign className="w-3.5 h-3.5 text-[#FFD700]" />
+                  <span className="font-semibold text-[#E0E0E0]">Valor da Proposta:</span>
+                  <span className="text-[#FFD700] font-semibold">R$ {data.proposalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                 </div>
               )}
               {data.approvalStatus && (
                 <div className="flex items-center gap-2">
-                  <FileCheck className="w-3.5 h-3.5 text-amber-600" />
-                  <span className="font-semibold text-slate-900">Status de Aprovação:</span>
+                  <FileCheck className="w-3.5 h-3.5 text-[#FFD700]" />
+                  <span className="font-semibold text-[#E0E0E0]">Status de Aprovação:</span>
                   <span className={`text-xs px-2 py-0.5 rounded ${
-                    data.approvalStatus === 'APPROVED' ? 'bg-emerald-100 text-emerald-700' :
-                    data.approvalStatus === 'REVIEW' ? 'bg-blue-100 text-blue-700' :
-                    'bg-amber-100 text-amber-700'
+                    data.approvalStatus === 'APPROVED' ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-700' :
+                    data.approvalStatus === 'REVIEW' ? 'bg-blue-900/30 text-blue-400 border border-blue-700' :
+                    'bg-amber-900/30 text-amber-400 border border-amber-700'
                   }`}>
                     {data.approvalStatus === 'APPROVED' ? 'Aprovado' :
                      data.approvalStatus === 'REVIEW' ? 'Em Revisão' : 'Pendente'}
@@ -508,10 +565,10 @@ export const N8NBaseNode = ({
 
           {/* Contador de Tempo Decorrido */}
           {data.status === 'doing' && elapsedTime && (
-            <div className="flex items-center gap-2 text-xs border-t border-slate-200 pt-2 mt-2">
-              <Clock className="w-3.5 h-3.5 text-amber-600" />
-              <span className="font-semibold text-slate-900">Tempo Decorrido:</span>
-              <span className="text-amber-700 font-mono">{elapsedTime}</span>
+            <div className="flex items-center gap-2 text-xs border-t border-slate-700 pt-2 mt-2">
+              <Clock className="w-3.5 h-3.5 text-[#FFD700]" />
+              <span className="font-semibold text-[#E0E0E0]">Tempo Decorrido:</span>
+              <span className="text-[#FFD700] font-mono font-semibold">{elapsedTime}</span>
             </div>
           )}
 
@@ -519,10 +576,10 @@ export const N8NBaseNode = ({
         </div>
 
         {/* Footer */}
-        <div className="mt-2 pt-2 border-t border-slate-200 text-[10px] text-slate-600 px-3 bg-slate-50/50">
+        <div className="mt-2 pt-2 border-t border-slate-700 text-[10px] text-[#A0A0A0] px-3 bg-[#121212]/50">
           {/* Cliente / Evento / Job */}
           <div className="mb-1">
-            <span className="font-medium">{data.clientName || data.projectName || data.eventName || 'Sem nome'}</span>
+            <span className="font-medium text-[#E0E0E0]">{data.clientName || data.projectName || data.eventName || 'Sem nome'}</span>
           </div>
           {/* Origem do fluxo */}
           <div>

@@ -73,35 +73,49 @@ export const LoginLanding: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-slate-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ background: 'linear-gradient(to bottom right, #F8FAFC, #FFFFFF)', fontFamily: 'Inter, sans-serif' }}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white border border-slate-300 rounded-lg shadow-lg p-8"
+        className="w-full max-w-md bg-white border border-slate-300 p-8"
+        style={{
+          borderRadius: '12px',
+          boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05)',
+          fontFamily: 'Inter, sans-serif',
+        }}
       >
         {/* Logo */}
         <div className="flex justify-center mb-8">
-          <img src="/logo_diario.png" className="h-10 object-contain" alt="Diário do Vale" />
+          <img src="/logo_diario.png" className="h-12 object-contain" alt="Diário do Vale" />
         </div>
 
         {/* Landing Mode */}
         {mode === 'landing' && (
-          <div className="space-y-6">
-            <div className="text-center space-y-2">
-              <h1 className="text-2xl font-black text-slate-900">Bem-vindo ao NewsFlow OS</h1>
-              <p className="text-sm text-slate-600">O novo pulso do Diário do Vale</p>
-            </div>
+            <div className="space-y-6">
+              <div className="text-center space-y-3">
+                <h1 className="text-2xl font-black" style={{ color: '#0F172A', fontFamily: 'Inter, sans-serif' }}>Bem-vindo ao NewsFlow OS</h1>
+                <p className="text-sm" style={{ color: '#64748B', fontFamily: 'Inter, sans-serif' }}>O novo pulso do Diário do Vale</p>
+              </div>
             <div className="space-y-3">
               <button
                 onClick={() => setMode('login')}
-                className="w-full px-6 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition-all shadow-sm flex items-center justify-center gap-2"
+                className="w-full px-6 py-3 bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
+                style={{
+                  borderRadius: '12px',
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05)',
+                  fontFamily: 'Inter, sans-serif',
+                }}
               >
                 <LogIn className="w-5 h-5" />
                 Sou Cadastrado
               </button>
               <button
                 onClick={() => setMode('register')}
-                className="w-full px-6 py-3 bg-white border-2 border-slate-300 text-slate-900 rounded-lg font-semibold hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+                className="w-full px-6 py-3 bg-white border-2 border-slate-300 text-slate-900 font-semibold hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+                style={{
+                  borderRadius: '12px',
+                  fontFamily: 'Inter, sans-serif',
+                }}
               >
                 <UserPlus className="w-5 h-5" />
                 Novo por aqui?
@@ -126,7 +140,8 @@ export const LoginLanding: React.FC = () => {
                     type="email"
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
+                    style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif' }}
                     placeholder="seu@email.com"
                     required
                   />
@@ -140,7 +155,8 @@ export const LoginLanding: React.FC = () => {
                     type="password"
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
+                    style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif' }}
                     placeholder="••••••••"
                     required
                   />
@@ -151,13 +167,19 @@ export const LoginLanding: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setMode('landing')}
-                className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-all"
+                className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition-all"
+                style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif', color: '#64748B' }}
               >
                 Voltar
               </button>
               <button
                 type="submit"
-                className="flex-1 px-4 py-2 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition-all shadow-sm flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-2 bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
+                style={{
+                  borderRadius: '12px',
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05)',
+                  fontFamily: 'Inter, sans-serif',
+                }}
               >
                 Entrar <ArrowRight className="w-4 h-4" />
               </button>

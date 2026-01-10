@@ -81,20 +81,21 @@ label, .text-label {
 .card-base {
   background: var(--bg-surface);
   border: 1px solid var(--border-muted);
-  border-radius: 6px;
+  border-radius: 12px;
   transition: all 0.15s ease;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
 }
 
 .card-base:hover {
   border-color: var(--border-hover);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
 }
 
 .card-elevated {
   background: var(--bg-elevated);
   border: 1px solid var(--border-muted);
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
 }
 
 /* ============================================
@@ -292,14 +293,16 @@ input::placeholder, textarea::placeholder {
 [class*="modal"], [class*="drawer"], [class*="popup"], [class*="tooltip"] {
   background-color: #FFFFFF !important;
   border: 1px solid #CBD5E1 !important; /* Slate-300 */
-  border-radius: 6px !important; /* rounded-md */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05) !important;
+  font-family: Inter, sans-serif !important;
 }
 
 /* Modal Overlay */
 .modal-overlay, [class*="overlay"] {
   background-color: rgba(0, 0, 0, 0.3) !important;
-  backdrop-filter: blur(4px) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
 }
 
 /* ============================================

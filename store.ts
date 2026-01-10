@@ -313,16 +313,8 @@ export const useStore = create<AppState>((set, get) => ({
 
   // Carregamento Inicial (Híbrido: Local + Supabase)
   initialize: async () => {
-    // 1. Tentar carregar do LocalStorage primeiro
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        set({ nodes: parsed.nodes || [], edges: parsed.edges || [] });
-      } catch (e) {
-        console.error("Local load failed", e);
-      }
-    }
+    // 1. Carregar workspaces primeiro (isso carregará o último workspace automaticamente)
+    await get().loadWorkspaces();
 
     const savedConsent = localStorage.getItem('newsflow_consent');
     if (savedConsent) {
@@ -331,58 +323,71 @@ export const useStore = create<AppState>((set, get) => ({
       } catch (e) {}
     }
 
-    // 2. Tentar sincronizar com Supabase
-    try {
-      set({ syncStatus: 'syncing' });
-      const { data: dbNodes, error: nodesErr } = await supabase.from('nodes').select('*');
-      const { data: dbEdges, error: edgesErr } = await supabase.from('edges').select('*');
-      const { data: dbMessages, error: msgErr } = await supabase.from('messages').select('*').order('timestamp', { ascending: true });
-      const { data: dbLeads, error: leadsErr } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
-      const { data: dbProjects, error: proErr } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+    // 2. Se não houver workspace carregado, tentar carregar do LocalStorage como fallback
+    if (get().nodes.length === 0) {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          set({ nodes: parsed.nodes || [], edges: parsed.edges || [] });
+        } catch (e) {
+          console.error("Local load failed", e);
+        }
+      }
+    }
 
-      if (!nodesErr && !edgesErr && dbNodes && dbEdges) {
-        const formattedNodes: AppNode[] = dbNodes.map(n => ({
-          id: n.id,
-          type: n.type,
-          position: { x: n.position_x, y: n.position_y },
-          data: n.data
-        }));
+    // 3. Tentar sincronizar com Supabase (fallback se workspace não carregou)
+    if (get().nodes.length === 0) {
+      try {
+        set({ syncStatus: 'syncing' });
+        const { data: dbNodes, error: nodesErr } = await supabase.from('nodes').select('*');
+        const { data: dbEdges, error: edgesErr } = await supabase.from('edges').select('*');
+        const { data: dbMessages, error: msgErr } = await supabase.from('messages').select('*').order('timestamp', { ascending: true });
+        const { data: dbLeads, error: leadsErr } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
+        const { data: dbProjects, error: proErr } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
 
-        const formattedEdges: AppEdge[] = dbEdges.map(e => ({
-          id: e.id,
-          source: e.source,
-          target: e.target,
-          animated: e.animated,
-          style: e.style,
-          data: e.data
-        }));
+        if (!nodesErr && !edgesErr && dbNodes && dbEdges) {
+          const formattedNodes: AppNode[] = dbNodes.map(n => ({
+            id: n.id,
+            type: n.type,
+            position: { x: n.position_x, y: n.position_y },
+            data: n.data
+          }));
 
-        const formattedMessages: Message[] = (dbMessages || []).map(m => ({
-          id: m.id,
-          sender: m.sender as any,
-          text: m.text,
-          timestamp: new Date(m.timestamp)
-        }));
+          const formattedEdges: AppEdge[] = dbEdges.map(e => ({
+            id: e.id,
+            source: e.source,
+            target: e.target,
+            animated: e.animated,
+            style: e.style,
+            data: e.data
+          }));
 
-        set({ 
-          nodes: formattedNodes.length > 0 ? formattedNodes : get().nodes, 
-          edges: formattedEdges.length > 0 ? formattedEdges : get().edges,
-          messages: formattedMessages,
-          leads: dbLeads || [],
-          projects: dbProjects || [],
-          syncStatus: 'online'
-        });
+          const formattedMessages: Message[] = (dbMessages || []).map(m => ({
+            id: m.id,
+            sender: m.sender as any,
+            text: m.text,
+            timestamp: new Date(m.timestamp)
+          }));
 
-        // 3. Iniciar Real-time Subscription e carregar Time
-        get().subscribeToMessages();
-        get().loadTeam();
-      } else {
+          set({ 
+            nodes: formattedNodes.length > 0 ? formattedNodes : get().nodes, 
+            edges: formattedEdges.length > 0 ? formattedEdges : get().edges,
+            messages: formattedMessages,
+            leads: dbLeads || [],
+            projects: dbProjects || [],
+            syncStatus: 'online'
+          });
+        }
+      } catch (err) {
+        console.warn("Supabase sync failed", err);
         set({ syncStatus: 'error' });
       }
-    } catch (err) {
-      console.warn("Supabase sync failed", err);
-      set({ syncStatus: 'error' });
     }
+
+    // 4. Iniciar Real-time Subscription e carregar Time
+    get().subscribeToMessages();
+    get().loadTeam();
   },
 
   subscribeToMessages: () => {
@@ -739,6 +744,21 @@ export const useStore = create<AppState>((set, get) => ({
       });
       set({ syncStatus: 'online' });
     } catch (err) {
+      set({ syncStatus: 'error' });
+    }
+  },
+
+  deleteEdge: async (edgeId: string) => {
+    get().pushToUndo();
+    set({
+      edges: get().edges.filter((edge) => edge.id !== edgeId),
+      syncStatus: 'syncing'
+    });
+    try {
+      await supabase.from('edges').delete().eq('id', edgeId);
+      set({ syncStatus: 'online' });
+    } catch (err) {
+      console.error("Failed to delete edge", err);
       set({ syncStatus: 'error' });
     }
   },
@@ -1573,6 +1593,133 @@ export const useStore = create<AppState>((set, get) => ({
         c.id === id ? { ...c, status, paymentDate: status === 'PAID' ? new Date().toISOString() : undefined } : c
       )
     }));
+  },
+
+  // Workspace Management
+  currentWorkspaceId: null,
+  workspaces: [],
+
+  createWorkspace: async (name: string) => {
+    try {
+      const layoutJson = {
+        nodes: get().nodes,
+        edges: get().edges,
+      };
+
+      const { data, error } = await supabase
+        .from('workspaces')
+        .insert({
+          name,
+          layout_json: layoutJson,
+          user_id: 'default_user', // TODO: Integrar com auth real
+          is_default: get().workspaces.length === 0,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      set(state => ({
+        workspaces: [...state.workspaces, data],
+        currentWorkspaceId: data.id,
+      }));
+
+      return data.id;
+    } catch (err) {
+      console.error('Erro ao criar workspace:', err);
+      throw err;
+    }
+  },
+
+  loadWorkspace: async (workspaceId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('workspaces')
+        .select('*')
+        .eq('id', workspaceId)
+        .single();
+
+      if (error) throw error;
+
+      if (data && data.layout_json) {
+        set({
+          nodes: data.layout_json.nodes || [],
+          edges: data.layout_json.edges || [],
+          currentWorkspaceId: workspaceId,
+        });
+        localStorage.setItem('newsflow_current_workspace', workspaceId);
+      }
+    } catch (err) {
+      console.error('Erro ao carregar workspace:', err);
+    }
+  },
+
+  switchWorkspace: async (workspaceId: string) => {
+    await get().loadWorkspace(workspaceId);
+  },
+
+  loadWorkspaces: async () => {
+    try {
+      const { data, error } = await supabase
+        .from('workspaces')
+        .select('*')
+        .order('updated_at', { ascending: false });
+
+      if (error) throw error;
+
+      set({ workspaces: data || [] });
+
+      // Carregar último workspace ou criar um padrão
+      if (data && data.length > 0) {
+        const lastWorkspaceId = localStorage.getItem('newsflow_current_workspace') || data[0].id;
+        await get().loadWorkspace(lastWorkspaceId);
+      } else {
+        // Criar workspace padrão se não existir nenhum
+        const defaultId = await get().createWorkspace('Workspace Principal');
+        localStorage.setItem('newsflow_current_workspace', defaultId);
+      }
+    } catch (err) {
+      console.error('Erro ao carregar workspaces:', err);
+    }
+  },
+
+  groupSelectedNodes: (groupName: string, groupColor: string = 'purple') => {
+    const { nodes, edges, addNode, updateNodeData } = get();
+    const selectedNodes = nodes.filter(n => n.selected);
+    
+    if (selectedNodes.length === 0) return;
+
+    // Calcular bounding box dos nodes selecionados
+    const positions = selectedNodes.map(n => n.position);
+    const minX = Math.min(...positions.map(p => p.x));
+    const minY = Math.min(...positions.map(p => p.y));
+    const maxX = Math.max(...positions.map(p => p.x));
+    const maxY = Math.max(...positions.map(p => p.y));
+
+    const groupWidth = maxX - minX + 400;
+    const groupHeight = maxY - minY + 200;
+    const groupX = minX - 50;
+    const groupY = minY - 50;
+
+    // Criar node do tipo Group
+    const groupId = `group-${Date.now()}`;
+    addNode('custom_action', { x: groupX, y: groupY }, {
+      label: groupName,
+      status: 'todo',
+      groupData: {
+        nodeIds: selectedNodes.map(n => n.id),
+        color: groupColor,
+        width: groupWidth,
+        height: groupHeight,
+      },
+    });
+
+    // Atualizar nodes selecionados para serem filhos do grupo
+    selectedNodes.forEach(node => {
+      updateNodeData(node.id, {
+        parentGroupId: groupId,
+      });
+    });
   },
 
   // Feedback System

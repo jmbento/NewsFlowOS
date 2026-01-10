@@ -15,6 +15,9 @@ import { MeetingNode } from './MeetingNode';
 import NodeInspector from './NodeInspector';
 import { ClippingEngine } from '../services/clipping_engine';
 import { ProjectInputTree } from './ProjectInputTree';
+import { useAutosave } from '../hooks/useAutosave';
+import { SyncIndicator } from './SyncIndicator';
+import { WorkspaceManager } from './WorkspaceManager';
 import { 
   Plus, 
   Copy, 
@@ -34,7 +37,8 @@ import {
   PenTool,
   Users,
   Zap,
-  RotateCcw
+  RotateCcw,
+  Package
 } from 'lucide-react';
 
 const nodeTypes = {
@@ -143,10 +147,11 @@ const ContextMenu = ({ x, y, nodeId, onClose, onEdit }: { x: number, y: number, 
   );
 };
 
-const PaneContextMenu = ({ x, y, onClose }: { x: number, y: number, onClose: () => void }) => {
-  const { addNode } = useStore();
+const PaneContextMenu = ({ x, y, onClose, onGroup }: { x: number, y: number, onClose: () => void, onGroup: () => void }) => {
+  const { addNode, nodes } = useStore();
   const { screenToFlowPosition } = useReactFlow();
   const menuRef = useRef<HTMLDivElement>(null);
+  const selectedCount = nodes.filter(n => n.selected).length;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -170,6 +175,21 @@ const PaneContextMenu = ({ x, y, onClose }: { x: number, y: number, onClose: () 
       className="fixed z-3000 bg-[#18181b] border border-zinc-700 rounded-xl shadow-2xl py-2 w-64 animate-in fade-in zoom-in-95 duration-200"
       style={{ left: x, top: y }}
     >
+      {selectedCount > 0 && (
+        <>
+          <div className="px-4 py-2 border-b border-zinc-800 mb-2">
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#FFFFFF]">Ações</span>
+          </div>
+          <button 
+            onClick={() => { onGroup(); onClose(); }}
+            className="w-full px-4 py-3 text-left hover:bg-white/5 flex items-center gap-4 group transition-all text-purple-400"
+          >
+            <Package className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            <span className="text-[11px] font-black uppercase group-hover:translate-x-1 transition-all leading-none">Agrupar Selecionados ({selectedCount})</span>
+          </button>
+          <div className="h-px bg-zinc-800 my-1 mx-2" />
+        </>
+      )}
       <div className="px-4 py-2 border-b border-zinc-800 mb-2">
         <span className="text-[10px] font-black uppercase tracking-widest text-[#FFFFFF]">Criar Componente Neural</span>
       </div>
@@ -315,12 +335,17 @@ const EditModal = ({ nodeId, onClose }: { nodeId: string, onClose: () => void })
 };
 
 const FlowInner = () => {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode, undo, redo } = useStore();
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode, undo, redo, currentWorkspaceId, groupSelectedNodes } = useStore();
   const [menu, setMenu] = useState<{ x: number, y: number, nodeId: string } | null>(null);
   const [paneMenu, setPaneMenu] = useState<{ x: number, y: number } | null>(null);
   const [editingNodeId, setEditingNodeId] = useState<string | null>(null);
   const [showInputTree, setShowInputTree] = useState(false);
+  const [groupName, setGroupName] = useState('');
+  const [showGroupDialog, setShowGroupDialog] = useState(false);
   const { screenToFlowPosition } = useReactFlow();
+  
+  // Autosave hook
+  const syncStatus = useAutosave(currentWorkspaceId);
 
   // Undo/Redo Support
   useEffect(() => {
@@ -409,6 +434,8 @@ const FlowInner = () => {
         {/* Status Indicator */}
         <Panel position="top-right" className="flex items-center gap-2">
            <HandshakeIndicator />
+           <SyncIndicator status={syncStatus} />
+           <WorkspaceManager />
         </Panel>
       </ReactFlow>
 

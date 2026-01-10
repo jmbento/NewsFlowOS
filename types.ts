@@ -240,6 +240,20 @@ export interface NodeData {
     isRunning: boolean;
     lastUpdate?: string;
   };
+
+  // Approval System
+  approvalStatus?: 'PENDING' | 'REVIEW' | 'APPROVED';
+
+  // Workflow Progress (para workflows específicos)
+  workflowProgress?: Record<string, boolean>; // Ex: { step_0: true, step_1: false }
+
+  // Matéria Especial (Print) - Campos específicos
+  numPages?: number;
+  layout?: string;
+  editionDate?: string; // Formato: __/__/____
+
+  // Herança de Nome
+  parentCampaignId?: string; // ID da campanha/OS raiz
 }
 
 // Feedback System
@@ -268,6 +282,19 @@ export interface Message {
 
 export type SyncStatus = 'offline' | 'online' | 'syncing' | 'error';
 
+export interface Workspace {
+  id: string;
+  name: string;
+  layout_json: {
+    nodes: AppNode[];
+    edges: AppEdge[];
+  };
+  user_id?: string;
+  is_default?: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface AppState {
   nodes: AppNode[];
   edges: AppEdge[];
@@ -285,6 +312,8 @@ export interface AppState {
   userConsent: UserConsent | null;
   commissions: Commission[];
   theme: 'dark' | 'light';
+  currentWorkspaceId: string | null;
+  workspaces: Workspace[];
   
   // Actions
   setNodes: (nodes: AppNode[]) => void;
@@ -295,6 +324,7 @@ export interface AppState {
   updateNodeData: (id: string, data: Partial<NodeData>) => void;
   addNode: (type: NodeType, position?: { x: number; y: number }, initialData?: Partial<NodeData>) => void;
   deleteNode: (id: string) => void;
+  deleteEdge: (edgeId: string) => void;
   duplicateNode: (id: string) => void;
   setActiveTab: (tab: 'canvas' | 'my-work' | 'master-dashboard' | 'brand-hub' | 'kanban' | 'chat' | 'master' | 'calendar' | 'sales' | 'report' | 'dashboard' | 'onboarding' | 'meeting' | 'projects' | 'team' | 'org-canvas' | 'project_new' | 'financial') => void;
   setIsRecording: (recording: boolean) => void;
@@ -342,4 +372,14 @@ export interface AppState {
   setUserConsent: (userId: string) => Promise<void>;
   calculateCommissions: (projectId: string, totalValue: number, hunterId?: string, closerId?: string) => Promise<void>;
   updateCommissionStatus: (id: string, status: CommissionStatus) => Promise<void>;
+  
+  // Workspace Actions
+  createWorkspace: (name: string) => Promise<string>;
+  loadWorkspace: (workspaceId: string) => Promise<void>;
+  switchWorkspace: (workspaceId: string) => Promise<void>;
+  loadWorkspaces: () => Promise<void>;
+  groupSelectedNodes: (groupName: string, groupColor?: string) => void;
+  feedbacks: Feedback[];
+  submitFeedback: (feedback: Omit<Feedback, 'id' | 'submittedAt' | 'status'>) => Promise<void>;
+  updateFeedbackStatus: (id: string, status: Feedback['status']) => Promise<void>;
 }

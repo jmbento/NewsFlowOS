@@ -18,6 +18,7 @@ import { ProjectInputTree } from './ProjectInputTree';
 import { useAutosave } from '../hooks/useAutosave';
 import { SyncIndicator } from './SyncIndicator';
 import { WorkspaceManager } from './WorkspaceManager';
+import { SmartEdge } from './SmartEdge';
 import { 
   Plus, 
   Copy, 
@@ -48,8 +49,13 @@ const nodeTypes = {
   meeting: MeetingNode,
 };
 
+const edgeTypes = {
+  smart: SmartEdge,
+};
+
 const defaultEdgeOptions = {
-  style: { stroke: '#475569', strokeWidth: 3 },
+  type: 'smart',
+  style: { stroke: '#707070', strokeWidth: 2 },
   animated: false,
 };
 

@@ -131,17 +131,47 @@ const App: React.FC = () => {
   }, [team]);
 
   return (
-    <div className="flex h-screen w-screen bg-background overflow-hidden font-sans text-foreground selection:bg-zinc-500/30">
+    <div className="flex h-screen w-screen bg-[#121212] overflow-hidden font-sans text-[#E0E0E0] selection:bg-yellow-500/30">
       {!userConsent && <LoginLanding />}
       
-      {/* Sidebar Nav (Linear Standard) */}
+      {/* Header Superior Fixo */}
+      <header className="fixed top-0 left-0 right-0 z-50 w-full h-16 bg-[#1E1E1E] border-b border-[#2A2A2A] flex items-center justify-between px-6">
+        <div className="flex items-center gap-3">
+          <img 
+            src="/logo_diario.png" 
+            className="h-8 object-contain" 
+            alt="Diário do Vale" 
+          />
+          <div className="h-6 w-px bg-[#2A2A2A]" />
+          <h1 className="text-sm font-bold text-[#FFD700]">NewsFlow OS</h1>
+        </div>
+        <div className="flex items-center gap-4">
+          <StatusSelector />
+          <ThemeLanguageToggle />
+          {/* Perfil do usuário */}
+          {user && (
+            <div className="flex items-center gap-2">
+              {user.avatar_url && (
+                <img 
+                  src={user.avatar_url} 
+                  alt={user.name || 'Usuário'} 
+                  className="w-8 h-8 rounded-full border-2 border-[#FFD700]"
+                />
+              )}
+              <span className="text-sm text-[#E0E0E0]">{user.name || 'Usuário'}</span>
+            </div>
+          )}
+        </div>
+      </header>
+      
+      {/* Sidebar Nav (Dark Mode Premium) */}
       <aside className={`
-        fixed md:static inset-y-0 left-0 z-30
-        w-[240px] bg-background border-r border-zinc-200 dark:border-zinc-800
+        fixed md:static inset-y-0 left-0 z-30 mt-16
+        w-[240px] bg-[#1E1E1E] border-r border-[#2A2A2A]
         flex flex-col transform transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}
-      style={{ height: '100vh', overflowY: 'auto' }}
+      style={{ height: 'calc(100vh - 4rem)', overflowY: 'auto' }}
       >
         <div className="p-6 pb-4 flex flex-col gap-2 flex-shrink-0">
           <img 
@@ -156,7 +186,7 @@ const App: React.FC = () => {
         </div>
         
         <nav className="flex-1 px-3 space-y-1 overflow-y-auto custom-scrollbar">
-          <div className="px-3 py-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Geral</div>
+          <div className="px-3 py-2 text-[10px] font-bold text-[#A0A0A0] uppercase tracking-widest">Geral</div>
                     <button onClick={() => setActiveTab('home')} className={`sidebar-item w-full ${activeTab === 'home' ? 'sidebar-item-active' : ''}`}>
               <LayoutDashboard className="w-4 h-4" /> <span>Página Inicial</span>
             </button>
@@ -176,7 +206,7 @@ const App: React.FC = () => {
               <Palette className="w-4 h-4" /> <span>Brand Hub</span>
             </button>
 
-          <div className="pt-6 px-3 py-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Comercial & Finanças</div>
+          <div className="pt-6 px-3 py-2 text-[10px] font-bold text-[#A0A0A0] uppercase tracking-widest">Comercial & Finanças</div>
           <button onClick={() => setActiveTab('sales')} className={`sidebar-item w-full ${activeTab === 'sales' ? 'sidebar-item-active' : ''}`}>
             <Briefcase className="w-4 h-4" /> <span>CRM Comercial</span>
           </button>
@@ -187,7 +217,7 @@ const App: React.FC = () => {
             <TrendingUp className="w-4 h-4" /> <span>Relatórios</span>
           </button>
 
-          <div className="pt-6 px-3 py-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Acesso</div>
+          <div className="pt-6 px-3 py-2 text-[10px] font-bold text-[#A0A0A0] uppercase tracking-widest">Acesso</div>
           <button onClick={() => setActiveTab('login')} className={`sidebar-item w-full ${activeTab === 'login' ? 'sidebar-item-active' : ''}`}>
             <ShieldCheck className="w-4 h-4" /> <span>Login Equipe/Admin</span>
           </button>
@@ -195,7 +225,7 @@ const App: React.FC = () => {
             <UserPlus className="w-4 h-4" /> <span>Cadastro de Equipe</span>
           </button>
 
-          <div className="pt-6 px-3 py-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Administração</div>
+          <div className="pt-6 px-3 py-2 text-[10px] font-bold text-[#A0A0A0] uppercase tracking-widest">Administração</div>
           <button onClick={() => setActiveTab('master-dashboard')} className={`sidebar-item w-full ${activeTab === 'master-dashboard' ? 'sidebar-item-active' : ''}`}>
             <BarChart3 className="w-4 h-4" /> <span>Dashboard Master</span>
           </button>

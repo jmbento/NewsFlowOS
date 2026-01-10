@@ -33,15 +33,30 @@
 }
 
 .dark {
-  --bg-global: #0F172A;
-  --bg-surface: #1E293B;
-  --bg-elevated: #1E293B;
-  --border-muted: #334155;
-  --border-hover: #475569;
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-  --input-bg: #1E293B;
+  /* Dark Mode Premium - Diário do Vale */
+  --bg-global: #121212;        /* Background Body */
+  --bg-surface: #1E1E1E;       /* Sidebar/Headers/Modais */
+  --bg-elevated: #1E1E1E;      /* Elevated surfaces */
+  
+  /* Border Palette */
+  --border-muted: #2A2A2A;     /* Bordas sutis */
+  --border-hover: #3A3A3A;      /* Bordas hover */
+  
+  /* Text Palette */
+  --text-primary: #E0E0E0;      /* Texto Principal */
+  --text-secondary: #A0A0A0;   /* Texto Secundário */
+  --text-muted: #707070;       /* Texto Muted */
+  
+  /* Accent Color - Amarelo Diário do Vale */
+  --accent-yellow: #FFD700;    /* Amarelo Diário */
+  --accent-purple: #8B5CF6;
+  --accent-blue: #3B82F6;
+  --accent-green: #10B981;
+  --accent-amber: #F59E0B;
+  --accent-rose: #F43F5E;
+  
+  /* Input */
+  --input-bg: #1E1E1E;
 }
 
 /* ============================================
@@ -56,6 +71,16 @@ body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Dark Mode Premium - Forçar tema escuro como padrão */
+body.dark,
+html.dark {
+  background-color: #121212 !important;
+}
+
+.dark body {
+  background-color: #121212 !important;
 }
 
 /* Typography - Clean & Professional */

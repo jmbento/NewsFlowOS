@@ -108,13 +108,23 @@ const App: React.FC = () => {
   // Inicialização do Sistema
   useEffect(() => {
     console.log('🚀 [APP] Inicializando NewsFlow OS...');
-    try {
-      initialize();
-      theme.init();
-      console.log('✅ [APP] Inicialização concluída');
-    } catch (error) {
-      console.error('❌ [APP] Erro na inicialização:', error);
-    }
+    const initApp = async () => {
+      try {
+        // Inicializar tema primeiro (síncrono)
+        if (typeof window !== 'undefined') {
+          theme.init();
+        }
+        
+        // Inicializar store (assíncrono)
+        await initialize();
+        console.log('✅ [APP] Inicialização concluída');
+      } catch (error) {
+        console.error('❌ [APP] Erro na inicialização:', error);
+        // Não quebrar a aplicação, apenas logar o erro
+      }
+    };
+    
+    initApp();
   }, [initialize]);
 
   // Status de Sincronização Visual

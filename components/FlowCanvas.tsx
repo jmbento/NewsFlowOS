@@ -449,6 +449,59 @@ const FlowInner = () => {
           <ProjectInputTree onClose={() => setShowInputTree(false)} />
         </div>
       )}
+
+      {/* Dialog de Agrupamento */}
+      {showGroupDialog && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+          <div className="bg-white border border-slate-300 rounded-md shadow-lg p-6 w-full max-w-md">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Agrupar Nodes Selecionados</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-semibold text-slate-700 mb-2 block">Nome do Grupo</label>
+                <input
+                  type="text"
+                  value={groupName}
+                  onChange={(e) => setGroupName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && groupName.trim()) {
+                      groupSelectedNodes(groupName.trim());
+                      setShowGroupDialog(false);
+                      setGroupName('');
+                    }
+                  }}
+                  placeholder="Ex: Campanha Q1 2026"
+                  className="w-full input"
+                  autoFocus
+                />
+              </div>
+              <div className="flex items-center gap-2 justify-end">
+                <button
+                  onClick={() => {
+                    setShowGroupDialog(false);
+                    setGroupName('');
+                  }}
+                  className="px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-md transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => {
+                    if (groupName.trim()) {
+                      groupSelectedNodes(groupName.trim());
+                      setShowGroupDialog(false);
+                      setGroupName('');
+                    }
+                  }}
+                  disabled={!groupName.trim()}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-md text-sm font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Criar Grupo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

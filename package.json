@@ -1,0 +1,40 @@
+{
+  "name": "newsflow-nodes",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "check-schema": "npx ts-node scripts/check-db-schema.ts",
+    "dry-run": "npx ts-node scripts/dry-run-check.ts",
+    "prebuild": "npm run check-schema",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "deploy": "npm run dry-run && vercel --prod",
+    "simulate": "npx ts-node scripts/full-simulation.ts"
+  },
+  "dependencies": {
+    "@google/genai": "^1.34.0",
+    "@google/generative-ai": "^0.24.1",
+    "@supabase/supabase-js": "^2.90.0",
+    "chart.js": "^4.5.1",
+    "framer-motion": "^12.24.10",
+    "lucide-react": "^0.562.0",
+    "react": "^19.2.3",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^19.2.3",
+    "reactflow": "^11.11.4",
+    "zustand": "^5.0.9"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "supabase": "^2.71.3",
+    "tailwindcss": "^4.1.18",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}

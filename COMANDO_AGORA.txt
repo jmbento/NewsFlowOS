@@ -1,0 +1,19 @@
+═══════════════════════════════════════════════════════════
+  🚨 COMANDO PARA RESOLVER TELA PRETA - EXECUTE AGORA
+═══════════════════════════════════════════════════════════
+
+COPIE E COLE NO TERMINAL:
+
+─────────────────────────────────────────────────────────
+cd /Volumes/bxdMAC/Projetos-apps/newsflow-nodes && lsof -ti:3000 | xargs kill 2>/dev/null; npm run build && cd dist && python3 -m http.server 3000
+─────────────────────────────────────────────────────────
+
+OU USE O SCRIPT:
+
+./RESOLVER_TELA_PRETA.sh
+
+═══════════════════════════════════════════════════════════
+
+Depois acesse: http://localhost:3000
+
+═══════════════════════════════════════════════════════════

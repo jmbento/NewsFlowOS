@@ -1,0 +1,19 @@
+═══════════════════════════════════════════════════════════
+  🚨 COMANDOS PARA EXECUTAR AGORA - REUNIÃO
+═══════════════════════════════════════════════════════════
+
+COPIE E COLE NO TERMINAL DO SEU MACBOOK:
+
+─────────────────────────────────────────────────────────
+cd /Volumes/bxdMAC/Projetos-apps/newsflow-nodes && mv .env.local .env.local.backup 2>/dev/null; npm run dev
+─────────────────────────────────────────────────────────
+
+OU EXECUTE O SCRIPT:
+
+./start-now.sh
+
+═══════════════════════════════════════════════════════════
+
+ACESSE: http://localhost:3000
+
+═══════════════════════════════════════════════════════════

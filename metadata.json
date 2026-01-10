@@ -1,0 +1,8 @@
+{
+  "name": "NewsFlow Nodes",
+  "description": "A high-performance editorial management system for newspapers featuring an infinite canvas, Kanban sync, and Gemini-powered meeting task extraction.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

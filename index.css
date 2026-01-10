@@ -1,0 +1,398 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+
+/* ============================================
+   LIGHT MINIMALIST PRECISION - NewsFlow Design System
+   Inspired by Linear/Notion - Clean, Professional, High Contrast
+   ============================================ */
+
+:root {
+  /* Background Palette */
+  --bg-global: #F1F5F9;        /* Slate-100 - Ultra light gray */
+  --bg-surface: #FFFFFF;       /* Pure white cards */
+  --bg-elevated: #FFFFFF;      /* Elevated surfaces */
+  
+  /* Border Palette */
+  --border-muted: #CBD5E1;     /* Slate-300 */
+  --border-hover: #94A3B8;     /* Slate-400 */
+  
+  /* Text Palette */
+  --text-primary: #0F172A;     /* Slate-900 - Almost black */
+  --text-secondary: #64748B;   /* Slate-500 */
+  --text-muted: #94A3B8;       /* Slate-400 */
+  
+  /* Accent Colors */
+  --accent-purple: #8B5CF6;
+  --accent-blue: #3B82F6;
+  --accent-green: #10B981;
+  --accent-amber: #F59E0B;
+  --accent-rose: #F43F5E;
+  
+  /* Input */
+  --input-bg: #FFFFFF;
+}
+
+.dark {
+  --bg-global: #0F172A;
+  --bg-surface: #1E293B;
+  --bg-elevated: #1E293B;
+  --border-muted: #334155;
+  --border-hover: #475569;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --input-bg: #1E293B;
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: var(--bg-global);
+  color: var(--text-primary);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Typography - Clean & Professional */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+/* Labels - Uppercase minimal */
+label, .text-label {
+  color: var(--text-secondary) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ============================================
+   CARD SYSTEM - Linear Style
+   ============================================ */
+
+.card-base {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-muted);
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.card-base:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.card-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================
+   STATUS INDICATORS
+   ============================================ */
+
+.status-todo { background-color: #94A3B8; }
+.status-doing { background-color: #F59E0B; }
+.status-review { background-color: #3B82F6; }
+.status-done { background-color: #10B981; }
+.status-blocked { background-color: #F43F5E; }
+
+/* Subtle Glows */
+.glow-success {
+  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.3);
+  border-color: rgba(16, 185, 129, 0.5) !important;
+}
+
+.glow-warning {
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.3);
+  border-color: rgba(245, 158, 11, 0.5) !important;
+}
+
+.glow-error {
+  box-shadow: 0 0 0 1px rgba(244, 63, 94, 0.3);
+  border-color: rgba(244, 63, 94, 0.5) !important;
+}
+
+/* ============================================
+   INPUT SYSTEM
+   ============================================ */
+
+input, textarea, select {
+  font-size: 14px !important;
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--border-muted) !important;
+  border-radius: 6px !important;
+  padding: 10px 12px !important;
+  color: var(--text-primary) !important;
+  transition: border-color 0.15s ease !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none !important;
+  border-color: #94A3B8 !important; /* Slate-400 - sutil */
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.2) !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* ============================================
+   REACT FLOW OVERRIDES
+   ============================================ */
+
+.react-flow__background {
+  background-color: var(--bg-global) !important;
+}
+
+.react-flow__handle {
+  width: 8px !important;
+  height: 8px !important;
+  background: var(--text-secondary) !important;
+  border: 2px solid var(--bg-surface) !important;
+  border-radius: 50% !important;
+}
+
+.react-flow__handle:hover {
+  background: var(--accent-purple) !important;
+}
+
+.react-flow__controls {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-muted) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.react-flow__controls-button {
+  background: transparent !important;
+  border-bottom: 1px solid var(--border-muted) !important;
+  color: var(--text-secondary) !important;
+}
+
+.react-flow__controls-button:hover {
+  background: var(--bg-global) !important;
+  color: var(--text-primary) !important;
+}
+
+.react-flow__minimap {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border-muted) !important;
+  border-radius: 8px !important;
+}
+
+/* ============================================
+   SIDEBAR NAVIGATION
+   ============================================ */
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.sidebar-item:hover {
+  background: var(--bg-global);
+  color: var(--text-primary);
+}
+
+.sidebar-item-active {
+  background: var(--bg-global) !important;
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR
+   ============================================ */
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border-muted);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ============================================
+   FLOATING ACTION BUTTON
+   ============================================ */
+
+.fab-button {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--accent-purple);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 100;
+}
+
+.fab-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 24px rgba(139, 92, 246, 0.5);
+}
+
+.fab-button:active {
+  transform: scale(0.95);
+}
+
+/* ============================================
+   NODE TYPE INDICATORS (Color bars)
+   ============================================ */
+
+.node-type-campaign { background: #8B5CF6; }
+.node-type-os { background: #3B82F6; }
+.node-type-site { background: #10B981; }
+.node-type-print { background: #F59E0B; }
+.node-type-video { background: #F43F5E; }
+.node-type-podcast { background: #EC4899; }
+.node-type-task { background: #6366F1; }
+
+/* ============================================
+   MODALS, DRAWERS, POP-UPS, TOOLTIPS
+   ============================================ */
+
+.modal, .drawer, .popup, .tooltip,
+[class*="modal"], [class*="drawer"], [class*="popup"], [class*="tooltip"] {
+  background-color: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important; /* Slate-300 */
+  border-radius: 6px !important; /* rounded-md */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modal Overlay */
+.modal-overlay, [class*="overlay"] {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+/* ============================================
+   STATUS BADGES - Light Precision
+   ============================================ */
+
+.badge, [class*="badge"] {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-todo, .status-todo {
+  background-color: #F1F5F9;
+  color: #475569;
+  border: 1px solid #CBD5E1;
+}
+
+.badge-doing, .status-doing {
+  background-color: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FCD34D;
+}
+
+.badge-review, .status-review {
+  background-color: #DBEAFE;
+  color: #1E40AF;
+  border: 1px solid #93C5FD;
+}
+
+.badge-done, .status-done {
+  background-color: #D1FAE5;
+  color: #065F46;
+  border: 1px solid #6EE7B7;
+}
+
+.badge-blocked, .status-blocked {
+  background-color: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FCA5A5;
+}
+
+/* ============================================
+   BUTTONS - Light Precision
+   ============================================ */
+
+button.primary, .btn-primary {
+  background-color: #000000;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.15s ease;
+}
+
+button.primary:hover, .btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button.secondary, .btn-secondary {
+  background-color: transparent;
+  color: #475569;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.15s ease;
+}
+
+button.secondary:hover, .btn-secondary:hover {
+  background-color: #F1F5F9;
+  border-color: #94A3B8;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}

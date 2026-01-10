@@ -309,6 +309,7 @@ const MasterDashboard: React.FC = () => {
             <p className="text-sm text-slate-500">Nenhum alerta no momento</p>
           )}
         </div>
+      </div>
       </>
       )}
 

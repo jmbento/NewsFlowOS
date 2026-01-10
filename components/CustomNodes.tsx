@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Handle, Position, NodeProps, NodeResizer } from 'reactflow';
 import { NodeData } from '../types';
 import { useStore } from '../store';
@@ -22,7 +22,13 @@ import {
   Unlink,
   CheckCircle,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Video as VideoIcon,
+  PenTool,
+  DollarSign,
+  FileCheck,
+  Calendar,
+  Presentation
 } from 'lucide-react';
 
 // Node Type Color Bars (Bordas laterais coloridas)
@@ -238,6 +244,7 @@ export const N8NBaseNode = ({
   const { nodes, edges, updateNodeData, deleteEdge } = useStore();
   const [showMenu, setShowMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [elapsedTime, setElapsedTime] = useState<string>('');
 
   const typeColor = NODE_TYPE_COLORS[nodeType] || 'border-l-slate-600';
   const Icon = NODE_TYPE_ICONS[nodeType] || FileText;
@@ -256,12 +263,41 @@ export const N8NBaseNode = ({
   // Workflow steps baseado no tipo
   const workflowSteps = WORKFLOW_STEPS[nodeType as keyof typeof WORKFLOW_STEPS] || [];
 
+  // Contador de tempo decorrido quando status é "doing"
+  useEffect(() => {
+    if (data.status === 'doing') {
+      const startTime = data.statusChangedAt || data.timeTracking?.startTime || Date.now();
+      const interval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const hours = Math.floor(elapsed / 3600);
+        const minutes = Math.floor((elapsed % 3600) / 60);
+        const seconds = elapsed % 60;
+        setElapsedTime(`${hours}h ${minutes}m ${seconds}s`);
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setElapsedTime('');
+    }
+  }, [data.status, data.statusChangedAt, data.timeTracking?.startTime]);
+
   // Toggle de aprovação
   const toggleApproval = () => {
     const nextStatus: ApprovalStatus = 
       approvalStatus === 'PENDING' ? 'REVIEW' :
       approvalStatus === 'REVIEW' ? 'APPROVED' : 'PENDING';
     updateNodeData(id, { approvalStatus: nextStatus });
+  };
+  
+  // Toggle de etapa do workflow
+  const toggleWorkflowStep = (stepIdx: number) => {
+    const stepKey = `step_${stepIdx}`;
+    const currentProgress = data.workflowProgress || {};
+    updateNodeData(id, {
+      workflowProgress: {
+        ...currentProgress,
+        [stepKey]: !currentProgress[stepKey]
+      }
+    });
   };
 
   // Desconectar node (remove todas as edges conectadas)
@@ -372,7 +408,7 @@ export const N8NBaseNode = ({
                 />
               </div>
               
-              {/* Lista de Etapas */}
+              {/* Lista de Etapas com Checkboxes Interativos */}
               <div className="space-y-1.5">
                 {workflowSteps.map((step, idx) => {
                   const stepKey = `step_${idx}`;
@@ -383,14 +419,25 @@ export const N8NBaseNode = ({
                   });
                   
                   return (
-                    <div key={idx} className="flex items-center gap-2 text-xs">
-                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                        isDone ? 'bg-emerald-500' : isCurrent ? 'bg-purple-600 animate-pulse' : 'bg-slate-300'
-                      }`} />
-                      <span className={`text-slate-700 ${isDone ? 'line-through text-slate-500' : isCurrent ? 'font-semibold text-purple-700' : ''}`}>
+                    <label 
+                      key={idx} 
+                      className="flex items-center gap-2 text-xs cursor-pointer hover:bg-slate-50 p-1 rounded transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleWorkflowStep(idx);
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isDone}
+                        onChange={() => toggleWorkflowStep(idx)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-3.5 h-3.5 rounded border-slate-300 text-purple-600 focus:ring-purple-500 focus:ring-offset-0 cursor-pointer"
+                      />
+                      <span className={`text-slate-700 flex-1 ${isDone ? 'line-through text-slate-500' : isCurrent ? 'font-semibold text-purple-700' : ''}`}>
                         {step}
                       </span>
-                    </div>
+                    </label>
                   );
                 })}
               </div>
@@ -429,6 +476,42 @@ export const N8NBaseNode = ({
                   )}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Campos específicos para COMERCIAL */}
+          {(nodeType === 'campaign' || nodeType === 'os') && (
+            <div className="space-y-2 text-xs border-t border-slate-200 pt-2 mt-2">
+              {data.proposalValue !== undefined && (
+                <div className="flex items-center gap-2">
+                  <DollarSign className="w-3.5 h-3.5 text-amber-600" />
+                  <span className="font-semibold text-slate-900">Valor da Proposta:</span>
+                  <span className="text-slate-700">R$ {data.proposalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                </div>
+              )}
+              {data.approvalStatus && (
+                <div className="flex items-center gap-2">
+                  <FileCheck className="w-3.5 h-3.5 text-amber-600" />
+                  <span className="font-semibold text-slate-900">Status de Aprovação:</span>
+                  <span className={`text-xs px-2 py-0.5 rounded ${
+                    data.approvalStatus === 'APPROVED' ? 'bg-emerald-100 text-emerald-700' :
+                    data.approvalStatus === 'REVIEW' ? 'bg-blue-100 text-blue-700' :
+                    'bg-amber-100 text-amber-700'
+                  }`}>
+                    {data.approvalStatus === 'APPROVED' ? 'Aprovado' :
+                     data.approvalStatus === 'REVIEW' ? 'Em Revisão' : 'Pendente'}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Contador de Tempo Decorrido */}
+          {data.status === 'doing' && elapsedTime && (
+            <div className="flex items-center gap-2 text-xs border-t border-slate-200 pt-2 mt-2">
+              <Clock className="w-3.5 h-3.5 text-amber-600" />
+              <span className="font-semibold text-slate-900">Tempo Decorrido:</span>
+              <span className="text-amber-700 font-mono">{elapsedTime}</span>
             </div>
           )}
 

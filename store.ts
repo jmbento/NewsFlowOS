@@ -8,6 +8,19 @@ import { canEditFinancialData, validateInvestmentEdit, validateROIEdit } from '.
 import { LogisticsEngine } from './services/logistics_engine';
 import { WhatsAppAlerts } from './services/whatsapp_alerts';
 
+// Labels oficiais para herança de nomes
+const NODE_TYPE_LABELS: Record<string, string> = {
+  campaign: 'CAMPANHA',
+  os: 'OS',
+  site: 'PUBLICAÇÃO',
+  print: 'MATÉRIA PAGA',
+  video: 'EVENTO ESPECIAL',
+  podcast: 'PODCAST',
+  task: 'TAREFA',
+  custom_action: 'AÇÃO',
+  demand: 'DEMANDA',
+};
+
 const STORAGE_KEY = 'newsflow_nodes_state_v3';
 let updateTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -548,6 +561,42 @@ export const useStore = create<AppState>((set, get) => ({
 
   onConnect: async (params: Connection) => {
     get().pushToUndo();
+    const { nodes, updateNodeData } = get();
+    
+    const sourceNode = nodes.find(n => n.id === params.source);
+    const targetNode = nodes.find(n => n.id === params.target);
+    
+    // Lógica Inteligente de Conexão
+    
+    // 1. Se Node A (Pessoa com userId) conectar em Node B (Tarefa), atribuir user_id automaticamente
+    if (sourceNode && targetNode && targetNode.type === 'task') {
+      const sourceUserId = sourceNode.data.userId || sourceNode.data.user_id;
+      if (sourceUserId) {
+        await updateNodeData(params.target, { 
+          userId: sourceUserId,
+          user_id: sourceUserId,
+          assignee: sourceNode.data.label || sourceNode.data.name || 'Usuário'
+        });
+        console.log(`✅ [SMART_CONNECT]: Usuário ${sourceUserId} atribuído à tarefa ${params.target}`);
+      }
+    }
+    
+    // 2. Se Node A (Campanha) conectar em Node B (OS), prefixar o nome da OS com o nome da Campanha
+    if (sourceNode && targetNode && sourceNode.type === 'campaign' && targetNode.type === 'os') {
+      const campaignName = sourceNode.data.label || sourceNode.data.name;
+      const osName = targetNode.data.label || targetNode.data.name || '';
+      
+      // Só prefixar se ainda não tiver o prefixo
+      if (campaignName && !osName.startsWith(campaignName)) {
+        const newOsName = `${campaignName} - ${osName || 'OS'}`;
+        await updateNodeData(params.target, { 
+          label: newOsName,
+          parentCampaignId: params.source
+        });
+        console.log(`✅ [SMART_CONNECT]: OS ${params.target} prefixada com campanha ${campaignName}`);
+      }
+    }
+    
     const newEdge: AppEdge = {
       ...params,
       id: `e-${params.source}-${params.target}-${Math.random().toString(36).substring(7)}`,
@@ -614,6 +663,12 @@ export const useStore = create<AppState>((set, get) => ({
       if (!validation.allowed) {
         throw new Error(validation.reason || 'Edição de ROI não permitida');
       }
+    }
+    
+    // Atualizar statusChangedAt quando status mudar para 'doing'
+    if (newData.status === 'doing' && node.data.status !== 'doing') {
+      finalData.statusChangedAt = Date.now();
+      console.log(`⏱️ [TIME_TRACKING]: Status mudou para 'doing' em ${node.id}, timestamp: ${finalData.statusChangedAt}`);
     }
     
     // 2. Trava de Conflito de Logística (Assets & Squad Integration)

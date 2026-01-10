@@ -263,6 +263,12 @@ export interface NodeData {
   diagramacao?: string; // Diagramação obrigatória
   prazo?: string; // Prazo obrigatório
   edicaoDia?: string; // Edição do Dia (formato: __/__/____)
+  
+  // User Assignment
+  userId?: string; // ID do usuário atribuído (quando Pessoa conecta em Tarefa)
+  
+  // Status Change Tracking
+  statusChangedAt?: number; // Timestamp quando status mudou para 'doing'
 }
 
 // Feedback System

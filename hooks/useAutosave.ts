@@ -18,9 +18,19 @@ interface Workspace {
 const DEBOUNCE_DELAY = 2000; // 2 segundos
 
 export function useAutosave(workspaceId: string | null) {
-  // Usar seletores do Zustand para evitar re-renders desnecessários
-  const nodes = useStore((state) => state?.nodes || []);
-  const edges = useStore((state) => state?.edges || []);
+  // Proteção contra erros no useStore
+  let nodes: any[] = [];
+  let edges: any[] = [];
+  
+  try {
+    // Usar seletores do Zustand para evitar re-renders desnecessários
+    nodes = useStore((state) => state?.nodes || []);
+    edges = useStore((state) => state?.edges || []);
+  } catch (error) {
+    console.error('❌ [AUTOSAVE] Erro ao acessar store:', error);
+    // Retornar estado idle se houver erro
+  }
+  
   const [syncStatus, setSyncStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastSavedRef = useRef<string>('');

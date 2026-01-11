@@ -100,10 +100,43 @@ const SpaceBackground = () => {
 };
 
 const App: React.FC = () => {
-  const { activeTab, setActiveTab, nodes, edges, initialize, team, userConsent, currentWorkspaceId } = useStore();
+  // Proteção contra erros no useStore
+  let storeData;
+  try {
+    storeData = useStore();
+  } catch (error) {
+    console.error('❌ [APP] Erro ao acessar store:', error);
+    return (
+      <div className="min-h-screen bg-[#121212] flex items-center justify-center p-4">
+        <div className="bg-[#1E1E1E] border border-slate-700 rounded-lg p-8 max-w-2xl">
+          <h1 className="text-2xl font-bold text-[#FFD700] mb-4">Erro ao Carregar Store</h1>
+          <p className="text-[#E0E0E0] mb-4">Erro ao inicializar o estado da aplicação.</p>
+          <pre className="bg-[#121212] p-4 rounded text-xs text-red-400 overflow-auto">
+            {error?.toString()}
+          </pre>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-6 px-4 py-2 bg-[#FFD700] text-[#121212] rounded-md font-semibold hover:bg-[#FFD700]/80 transition-colors"
+          >
+            Recarregar Página
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const { activeTab, setActiveTab, nodes, edges, initialize, team, userConsent, currentWorkspaceId } = storeData || {};
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const syncStatus = useAutosave(currentWorkspaceId);
+  
+  // Proteção no useAutosave
+  let syncStatus: 'idle' | 'saving' | 'saved' = 'idle';
+  try {
+    syncStatus = useAutosave(currentWorkspaceId || null);
+  } catch (error) {
+    console.error('❌ [APP] Erro no useAutosave:', error);
+    // Continuar sem autosave se houver erro
+  }
 
   // Inicialização do Sistema
   useEffect(() => {
@@ -112,12 +145,20 @@ const App: React.FC = () => {
       try {
         // Inicializar tema primeiro (síncrono)
         if (typeof window !== 'undefined') {
-          theme.init();
+          try {
+            theme.init();
+          } catch (themeError) {
+            console.warn('⚠️ [APP] Erro ao inicializar tema:', themeError);
+          }
         }
         
-        // Inicializar store (assíncrono)
-        await initialize();
-        console.log('✅ [APP] Inicialização concluída');
+        // Inicializar store (assíncrono) - apenas se initialize existir
+        if (initialize && typeof initialize === 'function') {
+          await initialize();
+          console.log('✅ [APP] Inicialização concluída');
+        } else {
+          console.warn('⚠️ [APP] Função initialize não disponível');
+        }
       } catch (error) {
         console.error('❌ [APP] Erro na inicialização:', error);
         // Não quebrar a aplicação, apenas logar o erro
@@ -164,19 +205,6 @@ const App: React.FC = () => {
         <div className="flex items-center gap-4">
           <StatusSelector />
           <ThemeLanguageToggle />
-          {/* Perfil do usuário */}
-          {user && (
-            <div className="flex items-center gap-2">
-              {user.avatar_url && (
-                <img 
-                  src={user.avatar_url} 
-                  alt={user.name || 'Usuário'} 
-                  className="w-8 h-8 rounded-full border-2 border-[#FFD700]"
-                />
-              )}
-              <span className="text-sm text-[#E0E0E0]">{user.name || 'Usuário'}</span>
-            </div>
-          )}
         </div>
       </header>
       

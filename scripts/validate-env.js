@@ -108,11 +108,8 @@ log('', 'reset');
 if (!allValid) {
   // No Vercel, as variáveis são injetadas durante o build, então não falhar
   if (isVercel) {
-    log('═══════════════════════════════════════════════════════════', 'yellow');
-    log('  ⚠️  VARIÁVEIS NÃO ENCONTRADAS NO PREBUILD', 'yellow');
-    log('═══════════════════════════════════════════════════════════\n', 'yellow');
-    log('💡 No Vercel, variáveis são injetadas durante o build.', 'blue');
-    log('💡 Continuando build... (variáveis serão validadas em runtime)\n', 'blue');
+    // No Vercel, variáveis são injetadas em runtime - sair silenciosamente
+    // Não mostrar avisos para não poluir os logs do build
     process.exit(0); // Não falhar no Vercel
   }
   

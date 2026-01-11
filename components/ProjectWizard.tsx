@@ -195,7 +195,7 @@ const ProjectWizard: React.FC = () => {
           <div className="space-y-3">
             <label className="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Equipe Alocada</label>
             <div className="grid grid-cols-4 gap-2">
-              {team.slice(0, 8).map(member => (
+              {team?.slice(0, 8).map(member => (
                 <button
                   key={member.id}
                   type="button"

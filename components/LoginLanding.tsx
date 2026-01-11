@@ -56,15 +56,15 @@ export const LoginLanding: React.FC = () => {
   const updateUserProfile = async (user: any) => {
     try {
       // Capturar avatar_url do Google se disponível
-      const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture;
-      const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0];
+      const avatarUrl = user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
+      const name = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0];
       
       if (avatarUrl || name) {
         const { error } = await supabase
           .from('profiles')
           .upsert({
-            id: user.id,
-            email: user.email,
+            id: user?.id,
+            email: user?.email,
             name: name,
             avatar_url: avatarUrl,
             updated_at: new Date().toISOString(),

@@ -87,7 +87,7 @@ export const FinancialDashboard: React.FC = () => {
           <div className="space-y-3">
             {displayCommissions.map((comm) => {
               const project = leads.find(l => l.id === comm.projectId);
-              const user = team.find(t => t.id === comm.userId);
+              const user = team?.find(t => t.id === comm.userId);
               return (
                 <div key={comm.id} className="bg-white dark:bg-[#18181b] border border-zinc-100 dark:border-[#27272a] p-4 rounded-xl flex items-center justify-between hover:border-yellow-500/50 transition-all shadow-sm">
                   <div className="flex items-center gap-4">

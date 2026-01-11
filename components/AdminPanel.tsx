@@ -136,7 +136,7 @@ export const AdminPanel: React.FC = () => {
             <div className="divide-y divide-slate-200">
               {pendingUsers.map((user) => (
                 <motion.div
-                  key={user.id}
+                  key={user?.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="p-6 hover:bg-slate-50 transition-colors"
@@ -148,43 +148,43 @@ export const AdminPanel: React.FC = () => {
                           <Users className="w-6 h-6 text-slate-600" />
                         </div>
                         <div>
-                          <h3 className="font-bold text-slate-900">{user.name || 'Sem nome'}</h3>
+                          <h3 className="font-bold text-slate-900">{user?.name || 'Sem nome'}</h3>
                           <div className="flex items-center gap-4 mt-1">
                             <div className="flex items-center gap-1.5 text-sm text-slate-600">
                               <Mail className="w-4 h-4" />
-                              <span>{user.email}</span>
+                              <span>{user?.email}</span>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-4 ml-15">
-                        {user.cargo && (
+                        {user?.cargo && (
                           <div className="flex items-center gap-1.5 text-sm text-slate-600">
                             <Briefcase className="w-4 h-4" />
-                            <span>{user.cargo}</span>
+                            <span>{user?.cargo}</span>
                           </div>
                         )}
-                        {user.setor && (
+                        {user?.setor && (
                           <div className="flex items-center gap-1.5 text-sm text-slate-600">
                             <Building2 className="w-4 h-4" />
-                            <span>{user.setor}</span>
+                            <span>{user?.setor}</span>
                           </div>
                         )}
                       </div>
                       <p className="text-xs text-slate-500 mt-2 ml-15">
-                        Cadastrado em {new Date(user.created_at).toLocaleDateString('pt-BR')}
+                        Cadastrado em {new Date(user?.created_at).toLocaleDateString('pt-BR')}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => approveUser(user.id)}
+                        onClick={() => approveUser(user?.id)}
                         className="px-4 py-2 bg-emerald-500 text-white rounded-lg font-semibold hover:bg-emerald-600 transition-colors flex items-center gap-2 shadow-sm"
                       >
                         <CheckCircle2 className="w-4 h-4" />
                         Aprovar
                       </button>
                       <button
-                        onClick={() => rejectUser(user.id)}
+                        onClick={() => rejectUser(user?.id)}
                         className="px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition-colors flex items-center gap-2 shadow-sm"
                       >
                         <XCircle className="w-4 h-4" />

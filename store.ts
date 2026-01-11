@@ -1366,7 +1366,7 @@ export const useStore = create<AppState>((set, get) => ({
 
   updateTeamMember: async (id: string, updates: Partial<TeamMember>) => {
     set(state => ({
-      team: state.team.map(member => 
+      team: state.team?.map(member => 
         member.id === id ? { ...member, ...updates } : member
       )
     }));

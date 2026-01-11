@@ -28,27 +28,27 @@ export const SettingsPage: React.FC = () => {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', user.id)
+        .eq('id', user?.id)
         .single();
 
       if (error && error.code !== 'PGRST116') throw error;
 
       if (data) {
         setProfile({
-          name: data.name || user.user_metadata?.full_name || user.email?.split('@')[0] || '',
+          name: data.name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || '',
           cargo: data.cargo || data.role || '',
           setor: data.setor || '',
-          email: data.email || user.email || '',
-          avatar_url: data.avatar_url || data.avatar || user.user_metadata?.avatar_url || user.user_metadata?.picture || '',
+          email: data.email || user?.email || '',
+          avatar_url: data.avatar_url || data.avatar || user?.user_metadata?.avatar_url || user?.user_metadata?.picture || '',
         });
       } else {
         // Criar perfil se não existir
         setProfile({
-          name: user.user_metadata?.full_name || user.email?.split('@')[0] || '',
-          cargo: user.user_metadata?.cargo || '',
-          setor: user.user_metadata?.setor || '',
-          email: user.email || '',
-          avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || '',
+          name: user?.user_metadata?.full_name || user?.email?.split('@')[0] || '',
+          cargo: user?.user_metadata?.cargo || '',
+          setor: user?.user_metadata?.setor || '',
+          email: user?.email || '',
+          avatar_url: user?.user_metadata?.avatar_url || user?.user_metadata?.picture || '',
         });
       }
     } catch (error: any) {
@@ -67,12 +67,12 @@ export const SettingsPage: React.FC = () => {
       const { error } = await supabase
         .from('profiles')
         .upsert({
-          id: user.id,
-          name: profile.name,
-          cargo: profile.cargo,
-          setor: profile.setor,
-          email: profile.email,
-          avatar_url: profile.avatar_url,
+          id: user?.id,
+          name: profile?.name,
+          cargo: profile?.cargo,
+          setor: profile?.setor,
+          email: profile?.email,
+          avatar_url: profile?.avatar_url,
           updated_at: new Date().toISOString(),
         }, {
           onConflict: 'id',
@@ -137,8 +137,8 @@ export const SettingsPage: React.FC = () => {
           <div className="flex items-center gap-6 mb-8">
             <div className="relative">
               <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-slate-300 bg-slate-100">
-                {profile.avatar_url ? (
-                  <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover" />
+                {profile?.avatar_url ? (
+                  <img src={profile?.avatar_url} alt={profile?.name} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <User className="w-12 h-12 text-slate-400" />
@@ -166,7 +166,7 @@ export const SettingsPage: React.FC = () => {
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="text"
-                  value={profile.name}
+                  value={profile?.name}
                   onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                   className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
                   style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif' }}
@@ -183,7 +183,7 @@ export const SettingsPage: React.FC = () => {
                 <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="text"
-                  value={profile.cargo}
+                  value={profile?.cargo}
                   onChange={(e) => setProfile({ ...profile, cargo: e.target.value })}
                   className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent"
                   style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif' }}
@@ -199,7 +199,7 @@ export const SettingsPage: React.FC = () => {
               <div className="relative">
                 <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <select
-                  value={profile.setor}
+                  value={profile?.setor}
                   onChange={(e) => setProfile({ ...profile, setor: e.target.value })}
                   className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent appearance-none bg-white"
                   style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif' }}
@@ -225,7 +225,7 @@ export const SettingsPage: React.FC = () => {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   type="email"
-                  value={profile.email}
+                  value={profile?.email}
                   disabled
                   className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed"
                   style={{ borderRadius: '12px', fontFamily: 'Inter, sans-serif' }}

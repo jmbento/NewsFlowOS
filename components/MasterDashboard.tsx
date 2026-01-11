@@ -34,8 +34,8 @@ const MasterDashboard: React.FC = () => {
     const conflictNodes = nodes.filter((n) => n.data.status === 'RESOURCE_CONFLICT').length;
 
     // Eficiência de Tropa
-    const activeMembers = team.filter((m) => m.availability_status === 'ACTIVE').length;
-    const totalMembers = team.length;
+    const activeMembers = team?.filter((m) => m.availability_status === 'ACTIVE').length;
+    const totalMembers = team?.length;
     const efficiency = totalMembers > 0 ? (activeMembers / totalMembers) * 100 : 0;
 
     // Gargalos de Tempo
@@ -175,7 +175,7 @@ const MasterDashboard: React.FC = () => {
           </div>
           <p className="text-3xl font-semibold text-slate-900">{metrics.efficiency.toFixed(1)}%</p>
           <p className="text-xs text-slate-500 mt-1">
-            {team.filter((m) => m.availability_status === 'ACTIVE').length} de {team.length} ativos
+            {team?.filter((m) => m.availability_status === 'ACTIVE').length} de {team?.length} ativos
           </p>
         </motion.div>
 

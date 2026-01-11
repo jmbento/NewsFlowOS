@@ -35,7 +35,7 @@ export function setCurrentUser(user: User | null) {
 export function getCurrentUser(): User | null {
   // Em produção, buscar do Supabase Auth
   // const { data: { user } } = await supabase.auth.getUser();
-  // return user ? { id: user.id, email: user.email, role: user.user_metadata?.role || 'VIEWER' } : null;
+  // return user ? { id: user?.id, email: user?.email, role: user?.user_metadata?.role || 'VIEWER' } : null;
   
   return currentUser;
 }

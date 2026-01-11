@@ -19,7 +19,7 @@ const StatusSelector: React.FC = () => {
         const { data } = await supabase
           .from('profiles')
           .select('work_status')
-          .eq('id', user.id)
+          .eq('id', user?.id)
           .single();
 
         if (data?.work_status) {
@@ -49,7 +49,7 @@ const StatusSelector: React.FC = () => {
       const { error } = await supabase
         .from('profiles')
         .update({ work_status: newStatus, updated_at: new Date().toISOString() })
-        .eq('id', user.id);
+        .eq('id', user?.id);
 
       if (error) throw error;
 

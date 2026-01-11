@@ -108,7 +108,7 @@ const TeamManagement: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterSector, setFilterSector] = useState('All');
   
-  const filteredTeam = team.filter(m => {
+  const filteredTeam = team?.filter(m => {
     const matchesSearch = m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          m.role.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesSector = filterSector === 'All' || m.sector === filterSector;
@@ -122,8 +122,8 @@ const TeamManagement: React.FC = () => {
     return 0;
   });
 
-  const activeCount = team.filter(m => m.availability_status === 'ACTIVE').length;
-  const awayCount = team.filter(m => m.availability_status !== 'ACTIVE').length;
+  const activeCount = team?.filter(m => m.availability_status === 'ACTIVE').length;
+  const awayCount = team?.filter(m => m.availability_status !== 'ACTIVE').length;
 
   return (
     <div className="h-full bg-slate-50 dark:bg-slate-900 flex flex-col overflow-hidden p-6 lg:p-8">

@@ -409,9 +409,9 @@ const OrgCanvas: React.FC = () => {
     const orgEdges: Edge[] = [];
 
     // Group by hierarchy level
-    const diretoria = team.filter((m) => m.function?.includes('Diretoria') || m.role?.includes('Diretor'));
-    const nucleos = team.filter((m) => !diretoria.includes(m) && (m.sector || m.function));
-    const atores = team.filter((m) => !diretoria.includes(m) && !nucleos.includes(m));
+    const diretoria = team?.filter((m) => m.function?.includes('Diretoria') || m.role?.includes('Diretor'));
+    const nucleos = team?.filter((m) => !diretoria.includes(m) && (m.sector || m.function));
+    const atores = team?.filter((m) => !diretoria.includes(m) && !nucleos.includes(m));
 
     // Create nodes
     let yOffset = 100;

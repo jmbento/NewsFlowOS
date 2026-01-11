@@ -184,7 +184,7 @@ const App: React.FC = () => {
   const [helpCenterOpen, setHelpCenterOpen] = useState(false);
 
   const audiovisualInField = useMemo(() => {
-    return team.filter(t => t.sector === 'Audiovisual' && (t.name === 'Marco' || t.name === 'Ruan'));
+    return team?.filter(t => t.sector === 'Audiovisual' && (t.name === 'Marco' || t.name === 'Ruan'));
   }, [team]);
 
   return (
